@@ -1,45 +1,779 @@
-async function fetchPrice(asset, symbol) {
-  const status = document.getElementById(
-    asset === 'BTCUSDT' ? 'btcStatus' : 'ethStatus'
-  );
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101010">
+<title>Trading Sport</title>
 
-  const sources = [
-    async () => {
-      const r = await fetch(
-        'https://api.binance.com/api/v3/ticker/price?symbol=' + symbol
-      );
-      if (!r.ok) throw new Error('Binance');
-      return Number((await r.json()).price);
-    },
-    async () => {
-      const coin = asset === 'BTCUSDT' ? 'bitcoin' : 'ethereum';
-      const r = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=' +
-        coin + '&vs_currencies=usd'
-      );
-      if (!r.ok) throw new Error('CoinGecko');
-      const d = await r.json();
-      return Number(d[coin].usd);
-    }
-  ];
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#0b0b0d;color:#f5f5f5;
+ font-family:Tahoma,Arial,sans-serif;font-size:14px
+}
+header{
+ background:#151515;padding:17px 15px;
+ border-bottom:1px solid #292929;
+ display:flex;justify-content:space-between;align-items:center;
+ position:sticky;top:0;z-index:5
+}
+.logo{font-size:21px;font-weight:bold;color:#e7bb58}
+.badge{font-size:11px;background:#302817;color:#ffcf66;padding:7px 10px;border-radius:20px}
+.container{max-width:850px;margin:auto;padding:14px}
+.card{
+ background:#151517;border:1px solid #29292d;
+ border-radius:14px;padding:15px;margin-bottom:13px
+}
+h3{margin:0 0 14px;font-size:15px}
+.muted{color:#999;font-size:12px}
+.balance{font-size:29px;color:#e9c46a;font-weight:bold;margin:12px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pricebox{background:#202023;border-radius:10px;padding:13px}
+.price{font-size:18px;font-weight:bold;margin:9px 0}
+.green{color:#35d59a}
+.red{color:#ff6575}
+.gold{color:#e9c46a}
+label{display:block;color:#aaa;font-size:12px;margin:12px 0 7px}
+input,select{
+ width:100%;padding:12px;border-radius:8px;
+ border:1px solid #353539;background:#202023;color:white;
+ font-size:14px;outline:none
+}
+button{
+ border:0;border-radius:9px;padding:12px;
+ cursor:pointer;font-family:inherit;font-size:13px;font-weight:bold
+}
+button:disabled{opacity:.45}
+.btn{background:#e8bd60;color:#151515;width:100%;margin-top:14px}
+.btn-green{background:#167a59;color:white;flex:1}
+.btn-red{background:#a52e3b;color:white;flex:1}
+.btn-gray{background:#303034;color:white}
+.buttons{display:flex;gap:8px}
+.chart{height:360px;overflow:hidden;border-radius:10px;background:#101010}
+.chart iframe{width:100%;height:100%;border:0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:11px 7px;text-align:center;border-bottom:1px solid #303034}
+th{color:#aaa;font-weight:normal}
+.tablewrap{overflow-x:auto}
+.position{padding:13px 0;border-bottom:1px solid #303034}
+.position:last-child{border-bottom:0}
+.pill{font-size:11px;border-radius:5px;padding:5px 7px;background:#252529}
+.status{text-align:center;color:#999;font-size:12px;margin-top:8px}
+footer{text-align:center;color:#777;font-size:11px;padding:20px 10px}
+.notice{background:#292317;color:#e8c978;border-radius:9px;padding:11px;font-size:11px;line-height:2;margin-bottom:13px}
+hr{border:0;border-top:1px solid #303034;margin:12px 0}
+@media(max-width:420px){
+ .container{padding:9px}
+ .card{padding:12px}
+ .balance{font-size:25px}
+ .chart{height:300px}
+ th,td{padding:9px 5px}
+}
+</style>
+</head>
 
-  for (const source of sources) {
-    try {
-      const price = await source();
+<body>
 
-      if (!Number.isFinite(price) || price <= 0) {
-        throw new Error('Invalid price');
-      }
+<header>
+ <div class="logo">⚡ TRADING SPORT</div>
+ <div class="badge">DEMO ACCOUNT</div>
+</header>
 
-      state.prices[asset] = price;
-      status.textContent = '● قیمت دریافت شد';
-      status.className = 'subtle green';
-      return;
-    } catch (e) {
-      // امتحان منبع بعدی
-    }
+<main class="container">
+
+ <div class="notice">
+  حساب آزمایشی است؛ موجودی و معاملات شبیه‌سازی می‌شوند.
+  این برنامه به کارگزاری متصل نیست و معامله واقعی انجام نمی‌دهد.
+ </div>
+
+ <section class="card">
+  <div class="row">
+   <span class="muted">موجودی حساب دمو</span>
+   <span class="pill">USD</span>
+  </div>
+  <div class="balance" id="balance">$10,000.00</div>
+  <div class="grid">
+   <div>
+    <div class="muted">سود و زیان معاملات باز</div>
+    <div id="totalPnl" class="price">$0.00</div>
+   </div>
+   <div>
+    <div class="muted">مارجین معاملات باز</div>
+    <div id="usedMargin" class="price">$0.00</div>
+   </div>
+  </div>
+ </section>
+
+ <section class="card">
+  <h3>📊 قیمت بازار</h3>
+  <div class="grid">
+
+   <div class="pricebox">
+    <div class="muted">Bitcoin / USD</div>
+    <div class="price" id="btcPrice">$--</div>
+    <div class="muted" id="btcStatus">در حال دریافت قیمت...</div>
+   </div>
+
+   <div class="pricebox">
+    <div class="muted">Ethereum / USD</div>
+    <div class="price" id="ethPrice">$--</div>
+    <div class="muted" id="ethStatus">در حال دریافت قیمت...</div>
+   </div>
+
+   <div class="pricebox">
+    <div class="muted">Gold / USD</div>
+    <div class="price" id="goldPrice">$4,008.40</div>
+    <div class="muted">قیمت نمونه؛ زنده نیست</div>
+   </div>
+
+   <div class="pricebox">
+    <div class="muted">وضعیت بازار</div>
+    <div class="price" style="font-size:15px">● <span class="green">DEMO</span></div>
+    <div class="muted">معاملات آزمایشی</div>
+   </div>
+
+  </div>
+  <div class="status" id="lastUpdate">در انتظار دریافت قیمت‌ها</div>
+  <button class="btn-gray" style="width:100%;margin-top:12px" onclick="refreshPrices()">
+   ↻ به‌روزرسانی قیمت‌ها
+  </button>
+ </section>
+
+ <section class="card">
+  <h3>📈 نمودار بازار</h3>
+  <div class="chart">
+   <iframe
+    id="chartFrame"
+    title="TradingView Bitcoin chart"
+    loading="lazy"
+    src="https://s.tradingview.com/widgetembed/?frameElementId=tv_chart&symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=0&toolbarbg=101010&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&studies=[]&locale=en">
+   </iframe>
+  </div>
+  <label>انتخاب نمودار</label>
+  <select id="chartSelect" onchange="changeChart()">
+   <option value="BINANCE:BTCUSDT">بیت‌کوین BTC/USD</option>
+   <option value="BINANCE:ETHUSDT">اتریوم ETH/USD</option>
+   <option value="OANDA:XAUUSD">طلای جهانی XAU/USD</option>
+  </select>
+  <p class="muted">نمودار از سرویس TradingView بارگذاری می‌شود.</p>
+ </section>
+
+ <section class="card">
+  <h3>🎯 ثبت معامله آزمایشی</h3>
+
+  <label>دارایی</label>
+  <select id="asset">
+   <option value="BTCUSDT">Bitcoin / BTC</option>
+   <option value="ETHUSDT">Ethereum / ETH</option>
+   <option value="XAUUSD">Gold / XAU</option>
+  </select>
+
+  <label>جهت معامله</label>
+  <select id="direction">
+   <option value="LONG">BUY / خرید (LONG)</option>
+   <option value="SHORT">SELL / فروش (SHORT)</option>
+  </select>
+
+  <label>مبلغ مارجین (دلار)</label>
+  <input id="margin" type="number" value="100" min="1" step="1">
+
+  <label>اهرم معاملاتی</label>
+  <select id="leverage">
+   <option value="1">1x</option>
+   <option value="2">2x</option>
+   <option value="5" selected>5x</option>
+   <option value="10">10x</option>
+   <option value="20">20x</option>
+  </select>
+
+  <label>حد سود (قیمت دارایی، اختیاری)</label>
+  <input id="takeProfit" type="number" min="0" step="any" placeholder="مثلاً 75000">
+
+  <label>حد ضرر (قیمت دارایی، اختیاری)</label>
+  <input id="stopLoss" type="number" min="0" step="any" placeholder="مثلاً 65000">
+
+  <div class="notice" style="margin-top:13px;margin-bottom:0">
+   حجم معامله = مارجین × اهرم. قیمت طلا در این نسخه نمونه است.
+  </div>
+
+  <div class="buttons">
+   <button class="btn-green" onclick="openTrade('LONG')">🟢 خرید / LONG</button>
+   <button class="btn-red" onclick="openTrade('SHORT')">🔴 فروش / SHORT</button>
+  </div>
+
+  <div id="tradeMessage" class="status"></div>
+ </section>
+
+ <section class="card">
+  <div class="row">
+   <h3 style="margin:0">📂 معاملات باز</h3>
+   <span class="pill" id="openCount">0</span>
+  </div>
+  <div id="positions">
+   <p class="muted">هنوز معامله‌ای باز نیست.</p>
+  </div>
+ </section>
+
+ <section class="card">
+  <h3>📜 تاریخچه معاملات</h3>
+  <div class="tablewrap">
+   <table>
+    <thead>
+     <tr>
+      <th>دارایی</th>
+      <th>جهت</th>
+      <th>سود/ضرر</th>
+      <th>نتیجه</th>
+     </tr>
+    </thead>
+    <tbody id="history">
+     <tr><td colspan="4" class="muted">تاریخچه خالی است.</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
+
+ <section class="card">
+  <h3>⚙️ تنظیمات حساب</h3>
+  <p class="muted">شروع دوباره، موجودی دمو را به ۱۰٬۰۰۰ دلار برمی‌گرداند و معاملات ذخیره‌شده را پاک می‌کند.</p>
+  <button class="btn-gray" style="width:100%" onclick="resetDemo()">
+   بازنشانی کامل حساب دمو
+  </button>
+ </section>
+
+</main>
+
+<footer>
+ Trading Sport © 2026<br>
+ شبیه‌ساز آموزشی معاملات — بدون اتصال به کارگزاری
+</footer>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "tradingSportDemoV8";
+
+const START_BALANCE = 10000;
+const GOLD_SAMPLE_PRICE = 4008.40;
+
+let state = loadState();
+
+function defaultState(){
+ return {
+  balance: START_BALANCE,
+  prices: {
+   BTCUSDT: null,
+   ETHUSDT: null,
+   XAUUSD: GOLD_SAMPLE_PRICE
+  },
+  positions: [],
+  history: [],
+  nextId: 1
+ };
+}
+
+function loadState(){
+ try{
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(!saved) return defaultState();
+
+  const data = JSON.parse(saved);
+
+  if(
+   !data ||
+   !Number.isFinite(data.balance) ||
+   !Array.isArray(data.positions) ||
+   !Array.isArray(data.history)
+  ){
+   return defaultState();
   }
 
-  status.textContent = 'قیمت دریافت نشد؛ اتصال شبکه را بررسی کن';
-  status.className = 'subtle red';
+  data.prices = data.prices || {};
+  data.prices.XAUUSD = GOLD_SAMPLE_PRICE;
+  data.nextId = Number(data.nextId) || 1;
+
+  return data;
+ }catch(e){
+  return defaultState();
+ }
 }
+
+function saveState(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+ }catch(e){
+  console.warn("ذخیره‌سازی محلی در دسترس نیست.");
+ }
+}
+
+function money(n){
+ if(!Number.isFinite(n)) return "$--";
+ return (n < 0 ? "-$" : "$") +
+  Math.abs(n).toLocaleString("en-US",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+  });
+}
+
+function priceText(n){
+ if(!Number.isFinite(n) || n <= 0) return "$--";
+ return "$" + n.toLocaleString("en-US",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
+}
+
+function assetName(asset){
+ if(asset === "BTCUSDT") return "BTC";
+ if(asset === "ETHUSDT") return "ETH";
+ return "GOLD";
+}
+
+function getPrice(asset){
+ if(asset === "XAUUSD") return GOLD_SAMPLE_PRICE;
+ return Number(state.prices[asset]) || null;
+}
+
+function setStatus(id,message,success){
+ const el = document.getElementById(id);
+ if(!el) return;
+
+ el.textContent = message;
+ el.className = success ? "muted green" : "muted red";
+}
+
+async function getBinancePrice(symbol){
+ const controller = new AbortController();
+ const timeout = setTimeout(()=>controller.abort(),8000);
+
+ try{
+  const url =
+   "https://api.binance.com/api/v3/ticker/price?symbol=" +
+   encodeURIComponent(symbol);
+
+  const response = await fetch(url,{
+   cache:"no-store",
+   signal:controller.signal
+  });
+
+  if(!response.ok) throw new Error("Binance unavailable");
+
+  const data = await response.json();
+  const price = Number(data.price);
+
+  if(!Number.isFinite(price) || price <= 0){
+   throw new Error("Invalid price");
+  }
+
+  return price;
+ }finally{
+  clearTimeout(timeout);
+ }
+}
+
+async function getCoinGeckoPrice(asset){
+ const coin = asset === "BTCUSDT" ? "bitcoin" : "ethereum";
+
+ const controller = new AbortController();
+ const timeout = setTimeout(()=>controller.abort(),8000);
+
+ try{
+  const url =
+   "https://api.coingecko.com/api/v3/simple/price?ids=" +
+   coin + "&vs_currencies=usd";
+
+  const response = await fetch(url,{
+   cache:"no-store",
+   signal:controller.signal
+  });
+
+  if(!response.ok) throw new Error("CoinGecko unavailable");
+
+  const data = await response.json();
+  const price = Number(data[coin]?.usd);
+
+  if(!Number.isFinite(price) || price <= 0){
+   throw new Error("Invalid price");
+  }
+
+  return price;
+ }finally{
+  clearTimeout(timeout);
+ }
+}
+
+async function fetchPrice(asset,symbol){
+ const statusId = asset === "BTCUSDT" ? "btcStatus" : "ethStatus";
+ const priceId = asset === "BTCUSDT" ? "btcPrice" : "ethPrice";
+
+ setStatus(statusId,"در حال دریافت قیمت...",true);
+
+ const sources = [
+  ()=>getBinancePrice(symbol),
+  ()=>getCoinGeckoPrice(asset)
+ ];
+
+ for(const source of sources){
+  try{
+   const price = await source();
+
+   if(!Number.isFinite(price) || price <= 0){
+    throw new Error("Invalid price");
+   }
+
+   state.prices[asset] = price;
+
+   document.getElementById(priceId).textContent = priceText(price);
+   setStatus(statusId,"● قیمت دریافت شد",true);
+
+   saveState();
+   return true;
+
+  }catch(error){
+   console.warn("Price source failed:",error);
+  }
+ }
+
+ document.getElementById(priceId).textContent = "$--";
+ setStatus(statusId,"قیمت دریافت نشد؛ اتصال شبکه را بررسی کن",false);
+ return false;
+}
+
+let refreshing = false;
+
+async function refreshPrices(){
+ if(refreshing) return;
+
+ refreshing = true;
+
+ try{
+  await Promise.all([
+   fetchPrice("BTCUSDT","BTCUSDT"),
+   fetchPrice("ETHUSDT","ETHUSDT")
+  ]);
+
+  document.getElementById("lastUpdate").textContent =
+   "آخرین بررسی: " + new Date().toLocaleTimeString("fa-IR");
+
+  checkStops();
+  render();
+
+ }finally{
+  refreshing = false;
+ }
+}
+
+function changeChart(){
+ const symbol = document.getElementById("chartSelect").value;
+
+ const url =
+  "https://s.tradingview.com/widgetembed/?" +
+  "frameElementId=tv_chart" +
+  "&symbol=" + encodeURIComponent(symbol) +
+  "&interval=15" +
+  "&hidesidetoolbar=1" +
+  "&symboledit=1" +
+  "&saveimage=0" +
+  "&toolbarbg=101010" +
+  "&theme=dark" +
+  "&style=1" +
+  "&timezone=Etc%2FUTC" +
+  "&withdateranges=1" +
+  "&hideideas=1" +
+  "&studies=%5B%5D" +
+  "&locale=en";
+
+ document.getElementById("chartFrame").src = url;
+}
+
+function openTrade(direction){
+ const asset = document.getElementById("asset").value;
+ const price = getPrice(asset);
+
+ const margin = Number(document.getElementById("margin").value);
+ const leverage = Number(document.getElementById("leverage").value);
+ const tpInput = document.getElementById("takeProfit").value.trim();
+ const slInput = document.getElementById("stopLoss").value.trim();
+
+ const tp = tpInput === "" ? null : Number(tpInput);
+ const sl = slInput === "" ? null : Number(slInput);
+
+ const message = document.getElementById("tradeMessage");
+
+ if(!price || !Number.isFinite(price)){
+  message.textContent =
+   "قیمت این دارایی دریافت نشده؛ ابتدا اتصال قیمت را بررسی کن.";
+  message.className = "status red";
+  return;
+ }
+
+ if(!Number.isFinite(margin) || margin <= 0){
+  message.textContent = "مبلغ مارجین باید بیشتر از صفر باشد.";
+  message.className = "status red";
+  return;
+ }
+
+ if(margin > state.balance){
+  message.textContent = "موجودی آزاد برای این مارجین کافی نیست.";
+  message.className = "status red";
+  return;
+ }
+
+ if(!Number.isFinite(leverage) || leverage < 1){
+  message.textContent = "اهرم انتخابی معتبر نیست.";
+  message.className = "status red";
+  return;
+ }
+
+ if(tp !== null && (!Number.isFinite(tp) || tp <= 0)){
+  message.textContent = "قیمت حد سود معتبر نیست.";
+  message.className = "status red";
+  return;
+ }
+
+ if(sl !== null && (!Number.isFinite(sl) || sl <= 0)){
+  message.textContent = "قیمت حد ضرر معتبر نیست.";
+  message.className = "status red";
+  return;
+ }
+
+ if(direction === "LONG"){
+  if(tp !== null && tp <= price){
+   message.textContent = "برای خرید، حد سود باید بالاتر از قیمت ورود باشد.";
+   message.className = "status red";
+   return;
+  }
+
+  if(sl !== null && sl >= price){
+   message.textContent = "برای خرید، حد ضرر باید پایین‌تر از قیمت ورود باشد.";
+   message.className = "status red";
+   return;
+  }
+ }else{
+  if(tp !== null && tp >= price){
+   message.textContent = "برای فروش، حد سود باید پایین‌تر از قیمت ورود باشد.";
+   message.className = "status red";
+   return;
+  }
+
+  if(sl !== null && sl <= price){
+   message.textContent = "برای فروش، حد ضرر باید بالاتر از قیمت ورود باشد.";
+   message.className = "status red";
+   return;
+  }
+ }
+
+ const usedMargin = state.positions.reduce(
+  (sum,p)=>sum+p.margin,0
+ );
+
+ if(margin > state.balance - usedMargin){
+  message.textContent = "مارجین آزاد کافی نیست.";
+  message.className = "status red";
+  return;
+ }
+
+ const position = {
+  id:state.nextId++,
+  asset,
+  direction,
+  entry:price,
+  margin,
+  leverage,
+  quantity:(margin*leverage)/price,
+  tp,
+  sl,
+  openedAt:new Date().toISOString()
+ };
+
+ state.positions.unshift(position);
+
+ message.textContent =
+  "معامله آزمایشی با موفقیت باز شد؛ حجم اسمی " +
+  money(margin*leverage);
+
+ message.className = "status green";
+
+ saveState();
+ render();
+}
+
+function positionPnl(position){
+ const current = getPrice(position.asset);
+
+ if(!current || !Number.isFinite(current)) return 0;
+
+ const movement =
+  position.direction === "LONG"
+   ? current-position.entry
+   : position.entry-current;
+
+ return movement * position.quantity;
+}
+
+function closeTrade(id,reason){
+ const index = state.positions.findIndex(p=>p.id===id);
+ if(index < 0) return;
+
+ const position = state.positions[index];
+ const pnl = positionPnl(position);
+
+ state.balance += position.margin + pnl;
+
+ state.history.unshift({
+  asset:position.asset,
+  direction:position.direction,
+  pnl,
+  reason:reason || "بستن دستی",
+  closedAt:new Date().toISOString()
+ });
+
+ if(state.history.length > 100){
+  state.history = state.history.slice(0,100);
+ }
+
+ state.positions.splice(index,1);
+
+ saveState();
+ render();
+}
+
+function checkStops(){
+ const list = [...state.positions];
+
+ for(const position of list){
+  const price = getPrice(position.asset);
+  if(!price) continue;
+
+  if(position.direction === "LONG"){
+   if(position.tp !== null && price >= position.tp){
+    closeTrade(position.id,"حد سود");
+   }else if(position.sl !== null && price <= position.sl){
+    closeTrade(position.id,"حد ضرر");
+   }
+  }else{
+   if(position.tp !== null && price <= position.tp){
+    closeTrade(position.id,"حد سود");
+   }else if(position.sl !== null && price >= position.sl){
+    closeTrade(position.id,"حد ضرر");
+   }
+  }
+ }
+}
+
+function render(){
+ const usedMargin = state.positions.reduce(
+  (sum,p)=>sum+p.margin,0
+ );
+
+ const totalPnl = state.positions.reduce(
+  (sum,p)=>sum+positionPnl(p),0
+ );
+
+ document.getElementById("balance").textContent =
+  money(state.balance);
+
+ const pnlEl = document.getElementById("totalPnl");
+ pnlEl.textContent = money(totalPnl);
+ pnlEl.className = "price " + (totalPnl >= 0 ? "green" : "red");
+
+ document.getElementById("usedMargin").textContent =
+  money(usedMargin);
+
+ document.getElementById("openCount").textContent =
+  state.positions.length;
+
+ const positions = document.getElementById("positions");
+
+ if(state.positions.length === 0){
+  positions.innerHTML =
+   '<p class="muted">هنوز معامله‌ای باز نیست.</p>';
+ }else{
+  positions.innerHTML = state.positions.map(p=>{
+   const current = getPrice(p.asset);
+   const pnl = positionPnl(p);
+   const sign = p.direction === "LONG" ? "🟢 خرید" : "🔴 فروش";
+
+   return `
+    <div class="position">
+     <div class="row">
+      <strong>${assetName(p.asset)} · ${sign}</strong>
+      <span class="pill">${p.leverage}x</span>
+     </div>
+
+     <div class="grid" style="margin-top:12px">
+      <div>
+       <div class="muted">قیمت ورود</div>
+       <div style="margin-top:6px">${priceText(p.entry)}</div>
+      </div>
+      <div>
+       <div class="muted">قیمت فعلی</div>
+       <div style="margin-top:6px">${priceText(current)}</div>
+      </div>
+      <div>
+       <div class="muted">مارجین</div>
+       <div style="margin-top:6px">${money(p.margin)}</div>
+      </div>
+      <div>
+       <div class="muted">سود / زیان شناور</div>
+       <div class="${pnl >= 0 ? "green" : "red"}" style="margin-top:6px">
+        ${money(pnl)}
+       </div>
+      </div>
+     </div>
+
+     <div class="muted" style="margin-top:10px">
+      حد سود: ${p.tp === null ? "تنظیم نشده" : priceText(p.tp)}
+      · حد ضرر: ${p.sl === null ? "تنظیم نشده" : priceText(p.sl)}
+     </div>
+
+     <button class="btn-gray" style="width:100%;margin-top:12px"
+      onclick="closeTrade(${p.id},'بستن دستی')">
+      بستن معامله
+     </button>
+    </div>
+   `;
+  }).join("");
+ }
+
+ const history = document.getElementById("history");
+
+ if(state.history.length === 0){
+  history.innerHTML =
+   '<tr><td colspan="4" class="muted">تاریخچه خالی است.</td></tr>';
+ }else{
+  history.innerHTML = state.history.slice(0,50).map(h=>`
+   <tr>
+    <td>${assetName(h.asset)}</td>
+    <td>${h.direction === "LONG" ? "خرید" : "فروش"}</td>
+    <td class="${h.pnl >= 0 ? "green" : "red"}">${money(h.pnl)}</td>
+    <td>${h.reason}</td>
+   </tr>
+  `).join("");
+ }
+}
+
+function resetDemo(){
+ const confirmed = confirm(
+  "تمام معاملات و تاریخچه پاک شوند و موجودی به ۱۰٬۰۰۰ دلار برگردد؟"
+ );
+
+ if(!confirmed) return;
+
+ state = defaultState();
+ saveState();
+ render();
+
+ refreshPrices();
+}
+
+render();
+refreshPrices();
+
+setInterval(refreshPrices,20000);
+</script>
+
+</body>
+  </html>
