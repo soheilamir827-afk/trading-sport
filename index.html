@@ -1,407 +1,45 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#090909">
-<meta name="description" content="Trading Sport - شبیه‌ساز آموزشی معاملات">
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg">
-<title>Trading Sport | تریدینگ اسپورت</title>
-
-<style>
-:root {
-  --bg:#090909;
-  --panel:#141414;
-  --panel2:#1c1c1c;
-  --gold:#e8bd58;
-  --text:#f5f5f5;
-  --muted:#999;
-  --green:#25ce8a;
-  --red:#ff5b65;
-  --border:#303030;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Tahoma,Arial,sans-serif;font-size:14px;
-  padding-bottom:85px
-}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.top{
-  padding:18px 16px;background:#101010;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:10
-}
-.brand{font-weight:bold;font-size:21px;color:var(--gold)}
-.brand small{display:block;font-size:10px;color:#aaa;margin-top:5px}
-.badge{color:var(--green);font-size:11px}
-.container{max-width:900px;margin:auto;padding:14px}
-.hero{
-  border:1px solid #493d20;border-radius:18px;
-  padding:23px 18px;margin-bottom:14px;
-  background:linear-gradient(135deg,#211b0d,#111)
-}
-.hero h1{font-size:25px;line-height:1.8;margin:0 0 7px}
-.hero p{color:#bbb;line-height:2;margin:0 0 16px}
-button{
-  border:0;border-radius:10px;padding:12px 15px;
-  font-weight:bold
-}
-.gold{background:var(--gold);color:#17120a}
-.darkbtn{background:#292929;color:white;border:1px solid #414141}
-.stats{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:9px;margin-bottom:14px
-}
-.stat,.card,.market{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:14px;padding:15px
-}
-.stat span{color:var(--muted);font-size:12px}
-.stat strong{display:block;font-size:21px;margin-top:12px;direction:ltr;text-align:right}
-.green{color:var(--green)!important}
-.red{color:var(--red)!important}
-.goldtext{color:var(--gold)!important}
-h2{font-size:17px;margin:0 0 14px}
-.section{margin:20px 0}
-.markets{display:grid;grid-template-columns:1fr;gap:9px}
-.market{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.coin{
-  width:42px;height:42px;display:flex;align-items:center;
-  justify-content:center;border-radius:12px;
-  background:#282318;color:var(--gold);font-weight:bold;font-size:20px
-}
-.marketleft{display:flex;align-items:center;gap:10px}
-.market small{display:block;color:var(--muted);margin-top:5px}
-.price{direction:ltr;text-align:left;font-weight:bold}
-.subtle{color:var(--muted);font-size:11px;margin-top:5px}
-.chartbox{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.charthead{padding:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.chartframe{height:340px;width:100%;border:0;background:#111}
-.periods{display:flex;gap:5px}
-.periods button{padding:8px;background:#282828;color:#ddd;font-size:11px}
-.periods button.active{background:var(--gold);color:#111}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{display:block;color:#bbb;font-size:12px;margin-bottom:7px}
-input,select{
-  width:100%;padding:12px;border:1px solid #393939;
-  border-radius:9px;background:#0d0d0d;color:white;outline:none
-}
-input:focus,select:focus{border-color:var(--gold)}
-.sidebuttons{display:flex;gap:8px;margin-bottom:14px}
-.sidebuttons button{flex:1;background:#292929;color:white;border:1px solid #444}
-.sidebuttons button.selected{background:var(--gold);color:#111;border-color:var(--gold)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
-.long{background:var(--green);color:#071c12}
-.short{background:var(--red);color:white}
-.note{color:#aaa;font-size:11px;line-height:2;margin-top:12px}
-.tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
-th,td{padding:12px 9px;text-align:right;border-bottom:1px solid #292929}
-th{color:var(--gold);font-weight:normal}
-.empty{color:#999;text-align:center;padding:22px}
-.smallbtn{padding:7px 10px;font-size:11px;background:#292929;color:white}
-.bottom{
-  position:fixed;bottom:0;left:0;right:0;z-index:20;
-  background:#111;border-top:1px solid #333;
-  display:flex;justify-content:space-around;
-  padding:10px 4px calc(10px + env(safe-area-inset-bottom))
-}
-.bottom button{background:transparent;color:#aaa;padding:7px;font-size:12px}
-.bottom button.active{color:var(--gold)}
-.toast{
-  position:fixed;top:75px;left:12px;right:12px;
-  max-width:500px;margin:auto;background:#252525;
-  padding:13px;border-radius:10px;z-index:99;
-  display:none;border:1px solid #444
-}
-@media(min-width:650px){
- .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
- .markets{grid-template-columns:repeat(3,minmax(0,1fr))}
- .market{align-items:flex-start}
- .market .price{font-size:13px}
-}
-</style>
-</head>
-
-<body>
-<div id="toast" class="toast"></div>
-
-<header class="top">
-  <div class="brand">TS <span>TRADING SPORT</span>
-    <small>TRADE SMART. TRADE STRONG.</small>
-  </div>
-  <div>
-    <span class="badge">● نسخه آزمایشی</span>
-    <button id="installBtn" class="gold" hidden>نصب اپلیکیشن</button>
-  </div>
-</header>
-
-<main class="container">
-
-<section class="hero" id="home">
-  <h1>قدرت تصمیم‌گیری،<br>معامله‌گری هوشمند.</h1>
-  <p>بازارها را بررسی کن، معاملات آزمایشی باز کن و نتیجه را در داشبورد ببین.</p>
-  <button class="gold" onclick="goTo('tradePanel')">شروع معامله دمو</button>
-  <button class="darkbtn" onclick="goTo('chartSection')">مشاهده نمودار</button>
-</section>
-
-<section class="stats">
-  <div class="stat"><span>موجودی آزاد دمو</span><strong id="balance">$10,000.00</strong></div>
-  <div class="stat"><span>سود/زیان معاملات باز</span><strong id="openPnl">$0.00</strong></div>
-  <div class="stat"><span>ارزش کل حساب دمو</span><strong id="equity">$10,000.00</strong></div>
-  <div class="stat"><span>معاملات باز</span><strong id="openCount">0</strong></div>
-</section>
-
-<section class="section">
-<h2>بازارها</h2>
-<div class="markets">
-  <div class="market">
-    <div class="marketleft"><div class="coin">₿</div><div><b>Bitcoin</b><small>BTC/USDT</small></div></div>
-    <div><div id="btcPrice" class="price">$--</div><div id="btcStatus" class="subtle">در حال دریافت قیمت...</div></div>
-  </div>
-  <div class="market">
-    <div class="marketleft"><div class="coin">Ξ</div><div><b>Ethereum</b><small>ETH/USDT</small></div></div>
-    <div><div id="ethPrice" class="price">$--</div><div id="ethStatus" class="subtle">در حال دریافت قیمت...</div></div>
-  </div>
-  <div class="market">
-    <div class="marketleft"><div class="coin">G</div><div><b>Gold</b><small>XAU/USD</small></div></div>
-    <div><div id="goldPrice" class="price">$4,008.40</div><div class="subtle">قیمت نمونه؛ ممکن است زنده نباشد</div></div>
-  </div>
-</div>
-</section>
-
-<section class="section" id="chartSection">
-<h2>نمودار کندلی</h2>
-<div class="chartbox">
-  <div class="charthead">
-    <b id="chartTitle">Bitcoin / USDT</b>
-    <div class="periods">
-      <button class="active" onclick="changeInterval('1',this)">۱ دقیقه</button>
-      <button onclick="changeInterval('5',this)">۵ دقیقه</button>
-      <button onclick="changeInterval('15',this)">۱۵ دقیقه</button>
-      <button onclick="changeInterval('60',this)">۱ ساعت</button>
-    </div>
-  </div>
-  <iframe id="chartFrame" class="chartframe" title="نمودار بازار"
-  src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=1&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=111111&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en"
-  loading="lazy" allowfullscreen></iframe>
-</div>
-<p class="note">نمایش نمودار به دسترسی شبکه به TradingView وابسته است.</p>
-</section>
-
-<section class="section card" id="tradePanel">
-<h2>ثبت معامله دمو</h2>
-<div class="sidebuttons">
-  <button id="longSide" class="selected" onclick="setSide('LONG')">خرید / LONG</button>
-  <button id="shortSide" onclick="setSide('SHORT')">فروش / SHORT</button>
-</div>
-
-<div class="formgrid">
-  <div><label for="asset">دارایی</label>
-    <select id="asset" onchange="assetChanged()">
-      <option value="BTCUSDT">Bitcoin (BTC/USDT)</option>
-      <option value="ETHUSDT">Ethereum (ETH/USDT)</option>
-      <option value="XAUUSD">Gold (XAU/USD)</option>
-    </select>
-  </div>
-  <div><label for="collateral">وثیقه دمو ($)</label>
-    <input id="collateral" type="number" value="100" min="1" step="1">
-  </div>
-  <div><label for="leverage">اهرم</label>
-    <select id="leverage">
-      <option value="1">1×</option><option value="2">2×</option>
-      <option value="5">5×</option><option value="10">10×</option>
-      <option value="20">20×</option>
-    </select>
-  </div>
-  <div><label for="sl">حد ضرر (%)</label><input id="sl" type="number" value="2" min="0" max="90" step="0.1"></div>
-  <div><label for="tp">حد سود (%)</label><input id="tp" type="number" value="4" min="0" max="500" step="0.1"></div>
-</div>
-
-<div class="actions">
-  <button class="long" onclick="openTrade('LONG')">خرید / LONG</button>
-  <button class="short" onclick="openTrade('SHORT')">فروش / SHORT</button>
-</div>
-<p class="note">این سایت فقط شبیه‌ساز آموزشی است. معاملات و موجودی مجازی‌اند؛ اتصال به کارگزار و معامله با پول واقعی فعال نیست.</p>
-</section>
-
-<section class="section card" id="openSection">
-<h2>معاملات باز</h2>
-<div class="tablewrap">
-<table><thead><tr><th>دارایی</th><th>جهت</th><th>وثیقه</th><th>ورود</th><th>قیمت فعلی</th><th>سود/زیان</th><th>عملیات</th></tr></thead>
-<tbody id="openRows"></tbody></table>
-</div>
-</section>
-
-<section class="section card" id="historySection">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-<h2>تاریخچه معاملات</h2>
-<button class="darkbtn" onclick="clearHistory()">پاک‌کردن تاریخچه</button>
-</div>
-<div class="tablewrap">
-<table><thead><tr><th>دارایی</th><th>جهت</th><th>وثیقه</th><th>سود/زیان</th><th>ورود</th><th>خروج</th><th>علت</th><th>زمان</th></tr></thead>
-<tbody id="historyRows"></tbody></table>
-</div>
-</section>
-
-<section class="section card">
-<h2>تنظیمات حساب دمو</h2>
-<p class="note">با شروع مجدد، تمام معاملات باز و تاریخچهٔ همین نسخه پاک می‌شوند.</p>
-<button class="darkbtn" onclick="resetDemo()">شروع مجدد با ۱۰٬۰۰۰ دلار</button>
-</section>
-
-<footer class="note" style="text-align:center">
-TRADING SPORT · محیط آزمایشی آموزشی<br>
-این سایت کارگزار مالی نیست و مشاوره سرمایه‌گذاری ارائه نمی‌دهد.
-</footer>
-</main>
-
-<nav class="bottom">
-<button class="active" onclick="goTo('home')">⌂<br>خانه</button>
-<button onclick="goTo('tradePanel')">↕<br>معامله</button>
-<button onclick="goTo('openSection')">▤<br>معاملات باز</button>
-<button onclick="goTo('historySection')">◷<br>تاریخچه</button>
-</nav>
-
-<script>
-'use strict';
-
-const STORAGE_KEY = 'tradingSportDemoV8';
-
-const initialState = () => ({
-  balance: 10000,
-  open: [],
-  history: [],
-  prices: {BTCUSDT: 0, ETHUSDT: 0, XAUUSD: 4008.40}
-});
-
-let state;
-try {
-  state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialState();
-  if (!Number.isFinite(state.balance) || !Array.isArray(state.open) ||
-      !Array.isArray(state.history)) state = initialState();
-} catch(e) {
-  state = initialState();
-}
-
-let side = 'LONG';
-let installPrompt = null;
-let priceBusy = false;
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function money(n) {
-  return (n < 0 ? '-$' : '$') +
-    Math.abs(Number(n) || 0).toLocaleString('en-US',{
-      minimumFractionDigits:2, maximumFractionDigits:2
-    });
-}
-
-function fmtPrice(n) {
-  return Number(n).toLocaleString('en-US',{
-    minimumFractionDigits:2, maximumFractionDigits:2
-  });
-}
-
-function notify(message) {
-  const t = document.getElementById('toast');
-  t.textContent = message;
-  t.style.display = 'block';
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => t.style.display='none', 3000);
-}
-
-function goTo(id) {
-  document.getElementById(id).scrollIntoView({behavior:'smooth'});
-}
-
-function setSide(value) {
-  side = value;
-  document.getElementById('longSide').classList.toggle('selected',value==='LONG');
-  document.getElementById('shortSide').classList.toggle('selected',value==='SHORT');
-}
-
-function assetName(asset) {
-  return ({BTCUSDT:'BTC/USDT',ETHUSDT:'ETH/USDT',XAUUSD:'XAU/USD'})[asset] || asset;
-}
-
-function currentPrice(asset) {
-  return Number(state.prices[asset]) || 0;
-}
-
-function assetChanged() {
-  const asset = document.getElementById('asset').value;
-  const symbols = {
-    BTCUSDT:'BINANCE%3ABTCUSDT',
-    ETHUSDT:'BINANCE%3AETHUSDT',
-    XAUUSD:'OANDA%3AXAUUSD'
-  };
-  document.getElementById('chartTitle').textContent = assetName(asset);
-  document.getElementById('chartFrame').src =
-    'https://s.tradingview.com/widgetembed/?symbol='+symbols[asset]+
-    '&interval=1&hidesidetoolbar=1&symboledit=0&saveimage=0'+
-    '&toolbarbg=111111&theme=dark&style=1&timezone=Etc%2FUTC'+
-    '&withdateranges=1&hideideas=1&locale=en';
-}
-
 async function fetchPrice(asset, symbol) {
-  const status = document.getElementById(asset==='BTCUSDT'?'btcStatus':'ethStatus');
-  try {
-    const response = await fetch(
-      'https://api.binance.com/api/v3/ticker/price?symbol='+symbol,
-      {cache:'no-store'}
-    );
-    if (!response.ok) throw new Error('API unavailable');
-    const data = await response.json();
-    const p = Number(data.price);
-    if (!Number.isFinite(p) || p <= 0) throw new Error('Invalid price');
-    state.prices[asset] = p;
-    status.textContent = '● قیمت زنده دریافت شد';
-    status.className = 'subtle green';
-  } catch(e) {
-    status.textContent = 'قیمت به‌روز دریافت نشد';
-    status.className = 'subtle';
+  const status = document.getElementById(
+    asset === 'BTCUSDT' ? 'btcStatus' : 'ethStatus'
+  );
+
+  const sources = [
+    async () => {
+      const r = await fetch(
+        'https://api.binance.com/api/v3/ticker/price?symbol=' + symbol
+      );
+      if (!r.ok) throw new Error('Binance');
+      return Number((await r.json()).price);
+    },
+    async () => {
+      const coin = asset === 'BTCUSDT' ? 'bitcoin' : 'ethereum';
+      const r = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=' +
+        coin + '&vs_currencies=usd'
+      );
+      if (!r.ok) throw new Error('CoinGecko');
+      const d = await r.json();
+      return Number(d[coin].usd);
+    }
+  ];
+
+  for (const source of sources) {
+    try {
+      const price = await source();
+
+      if (!Number.isFinite(price) || price <= 0) {
+        throw new Error('Invalid price');
+      }
+
+      state.prices[asset] = price;
+      status.textContent = '● قیمت دریافت شد';
+      status.className = 'subtle green';
+      return;
+    } catch (e) {
+      // امتحان منبع بعدی
+    }
   }
+
+  status.textContent = 'قیمت دریافت نشد؛ اتصال شبکه را بررسی کن';
+  status.className = 'subtle red';
 }
-
-async function refreshPrices() {
-  if (priceBusy) return;
-  priceBusy = true;
-  await Promise.all([
-    fetchPrice('BTCUSDT','BTCUSDT'),
-    fetchPrice('ETHUSDT','ETHUSDT')
-  ]);
-  priceBusy = false;
-  render();
-}
-
-function pnlFor(trade, price) {
-  if (!price || !trade.entry || !trade.collateral) return 0;
-  const change = trade.side === 'LONG'
-    ? (price-trade.entry)/trade.entry
-    : (trade.entry-price)/trade.entry;
-  return trade.collateral * trade.leverage * change;
-}
-
-function openTrade(direction) {
-  const asset = document.getElementById('asset').value;
-  const collateral = Number(document.getElementById('collateral').value);
-  const leverage = Number(document.getElementById('leverage').value);
-  const sl = Number(document.getElementById('sl').value);
-  const tp = Number(document.getElementById('tp').value);
-  const price = currentPrice(asset);
-
-  if (!price) return notify('قیمت این دارایی هنوز در دسترس نیست.');
-  if (!Number.isFinite(collateral) || collateral <= 0)
-    return notify('مبلغ وثیقه را درست وارد کن.');
-  if (!Number.isFinite(leverage) || leverage < 1 || leverage > 20)
-    return notify('اهرم انتخاب‌شده معتبر نیست.');
-  if (collateral > state.balance)
-    return notify('موجودی آزاد دمو کافی نیست.');
-  if (!Number.isFinite(sl) || !Number.isFinite(tp)
