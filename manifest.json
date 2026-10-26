@@ -1,7 +1,7 @@
 {
   "name": "Trading Sport",
   "short_name": "Trading Sport",
-  "description": "Trading Sport Demo Trading App",
+  "description": "Trading Sport - Demo Trading Simulator",
   "lang": "fa",
   "dir": "rtl",
   "start_url": "./",
@@ -17,5 +17,6 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }
-  ]
+  ],
+  "id": "/trading-sport/"
 }
