@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#101010"/><rect x="28" y="28" width="456" height="456" rx="88" fill="#211b0d" stroke="#e8bd55" stroke-width="10"/><path d="M100 340 L180 250 L240 295 L350 155 L410 205" fill="none" stroke="#e8bd55" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><text x="256" y="420" font-family="Arial,sans-serif" font-size="90" font-weight="900" text-anchor="middle" fill="#f8dc8a">TS</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#0b0b0d"/>
+  <path d="M290 45L115 275H235L200 467L397 207H275Z" fill="#e9c46a"/>
+  <text x="256" y="390" font-family="Arial" font-size="55" font-weight="bold" text-anchor="middle" fill="#ffffff">SPORT</text>
+</svg>
