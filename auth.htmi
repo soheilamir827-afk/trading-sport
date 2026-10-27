@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101010">
+  <title>ورود و ثبت‌نام | Trading Sport</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #0b0b0d;
+      color: #fff;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      padding: 26px;
+      border: 1px solid #35302a;
+      border-radius: 20px;
+      background: #151518;
+      box-shadow: 0 15px 45px #0008;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 27px;
+      font-weight: bold;
+      color: #e9c46a;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 5px;
+      border: 1px solid #38383e;
+      border-radius: 10px;
+      background: #222226;
+      color: #ddd;
+    }
+
+    .tab.active {
+      background: #e9c46a;
+      color: #111;
+      border-color: #e9c46a;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      font-size: 13px;
+      color: #ddd;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #393940;
+      border-radius: 10px;
+      background: #0d0d10;
+      color: white;
+      outline: none;
+      font-size: 15px;
+      direction: ltr;
+      text-align: left;
+    }
+
+    input:focus {
+      border-color: #e9c46a;
+    }
+
+    .submit {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #e9c46a;
+      color: #111;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .submit:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    #message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: #888;
+      font-size: 11px;
+      line-height: 1.9;
+      text-align: center;
+    }
+
+    #account {
+      display: none;
+      text-align: center;
+      line-height: 2;
+    }
+
+    #accountEmail {
+      color: #e9c46a;
+      overflow-wrap: anywhere;
+    }
+
+    .back {
+      display: block;
+      margin-top: 18px;
+      text-align: center;
+      color: #e9c46a;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="logo">⚡ TRADING SPORT</div>
+    <div class="subtitle">حساب کاربری خود را مدیریت کنید</div>
+
+    <section id="authSection">
+      <div class="tabs">
+        <button class="tab active" id="loginTab" type="button">
+          ورود
+        </button>
+
+        <button class="tab" id="signupTab" type="button">
+          ثبت‌نام
+        </button>
+      </div>
+
+      <form id="authForm">
+        <label for="email">آدرس ایمیل</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+          placeholder="name@example.com"
+          required
+        >
+
+        <label for="password">رمز عبور</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          minlength="8"
+          placeholder="حداقل ۸ کاراکتر"
+          required
+        >
+
+        <button class="submit" id="submitBtn" type="submit">
+          ورود به حساب
+        </button>
+      </form>
+
+      <div id="message" role="status"></div>
+    </section>
+
+    <section id="account">
+      <h3>حساب کاربری</h3>
+      <p>وضعیت ورود شما فعال است.</p>
+      <p id="accountEmail"></p>
+
+      <button class="submit" id="logoutBtn" type="button">
+        خروج از حساب
+      </button>
+    </section>
+
+    <a class="back" href="./">بازگشت به Trading Sport</a>
+
+    <div class="note">
+      این صفحه برای ورود و ثبت‌نام کاربران است.
+      ورود به حساب، به‌تنهایی امکان معامله با پول واقعی ایجاد نمی‌کند.
+    </div>
+  </main>
+
+  <script type="module">
+    import {
+      createClient
+    } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL =
+      "https://iickqivnqqveqgatfowb.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
+
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const form = document.getElementById("authForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const submitBtn = document.getElementById("submitBtn");
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const message = document.getElementById("message");
+    const authSection = document.getElementById("authSection");
+    const account = document.getElementById("account");
+    const accountEmail = document.getElementById("accountEmail");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let mode = "login";
+
+    function showMessage(text, success = false) {
+      message.style.display = "block";
+      message.textContent = text;
+      message.style.background = success ? "#123b27" : "#482020";
+      message.style.color = success ? "#a8ffc7" : "#ffb5b5";
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+
+      loginTab.classList.toggle("active", mode === "login");
+      signupTab.classList.toggle("active", mode === "signup");
+
+      submitBtn.textContent =
+        mode === "login" ? "ورود به حساب" : "ساخت حساب کاربری";
+
+      passwordInput.autocomplete =
+        mode === "login" ? "current-password" : "new-password";
+
+      message.style.display = "none";
+    }
+
+    loginTab.addEventListener("click", () => setMode("login"));
+    signupTab.addEventListener("click", () => setMode("signup"));
+
+    function showAccount(email) {
+      authSection.style.display = "none";
+      account.style.display = "block";
+      accountEmail.textContent = email || "کاربر";
+    }
+
+    function showAuth() {
+      authSection.style.display = "block";
+      account.style.display = "none";
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "لطفاً صبر کنید...";
+
+      try {
+        if (mode === "signup") {
+          const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo:
+                "https://soheilamir827-afk.github.io/trading-sport/auth.html"
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session && data.user) {
+            showAccount(data.user.email);
+          } else {
+            showMessage(
+              "ثبت‌نام انجام شد. ایمیلت را باز کن و لینک تأیید را بزن.",
+              true
+            );
+          }
+        } else {
+          const { data, error } =
+            await supabase.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+
+          showAccount(data.user.email);
+        }
+      } catch (error) {
+        showMessage("خطا: " + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent =
+          mode === "login" ? "ورود به حساب" : "ساخت حساب کاربری";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        showMessage("خطا در خروج: " + error.message);
+        return;
+      }
+
+      showAuth();
+      setMode("login");
+      showMessage("با موفقیت از حساب خارج شدی.", true);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        showAccount(session.user.email);
+      }
+    });
+
+    const { data: { session } } =
+      await supabase.auth.getSession();
+
+    if (session?.user) {
+      showAccount(session.user.email);
+    }
+  </script>
+</body>
+</html>
