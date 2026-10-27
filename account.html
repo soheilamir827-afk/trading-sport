@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>حساب کاربری | Trading Sport</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#0b0b0d;color:#fff;
+  font-family:Tahoma,Arial,sans-serif;padding:20px
+}
+.container{max-width:500px;margin:25px auto}
+.header{text-align:center;color:#e9c46a;font-size:25px;font-weight:bold}
+.subtitle{text-align:center;color:#aaa;margin:12px 0 25px}
+.card{
+  background:#17171b;border:1px solid #35302a;
+  border-radius:16px;padding:20px;margin-bottom:15px
+}
+.label{color:#aaa;font-size:13px}
+.balance{font-size:32px;color:#e9c46a;font-weight:bold;margin-top:12px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+button{
+  width:100%;padding:13px;border:0;border-radius:10px;
+  font-family:inherit;font-size:15px;font-weight:bold;
+  background:#e9c46a;color:#111;margin-top:10px
+}
+.secondary{background:#29292f;color:#fff}
+.status{font-size:13px;color:#aaa;line-height:2;overflow-wrap:anywhere}
+a{color:#e9c46a;text-decoration:none}
+#message{white-space:pre-wrap;overflow-wrap:anywhere;line-height:2}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="header">⚡ TRADING SPORT</div>
+  <div class="subtitle">پنل حساب کاربری</div>
+
+  <div class="card">
+    <div class="label">ایمیل حساب</div>
+    <div id="email" class="status">در حال بررسی...</div>
+
+    <div style="margin-top:22px" class="label">موجودی حساب دمو</div>
+    <div id="balance" class="balance">---</div>
+    <div class="status">USD آزمایشی · بدون ارزش پولی واقعی</div>
+
+    <button id="refresh">به‌روزرسانی اطلاعات</button>
+    <button id="logout" class="secondary">خروج از حساب</button>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <strong>وضعیت حساب</strong>
+      <span id="accountStatus" class="status">در حال بررسی</span>
+    </div>
+    <p id="message" class="status"></p>
+  </div>
+
+  <div class="card">
+    <strong>معاملات اخیر دمو</strong>
+    <div id="trades" class="status" style="margin-top:12px">
+      در حال دریافت اطلاعات...
+    </div>
+  </div>
+
+  <p class="status" style="text-align:center">
+    <a href="./">بازگشت به صفحه اصلی</a>
+    <br>
+    این صفحه فقط برای حساب آزمایشی است و معاملات واقعی انجام نمی‌دهد.
+  </p>
+
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://iickqivnqqveqgatfowb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const emailEl = document.getElementById("email");
+const balanceEl = document.getElementById("balance");
+const statusEl = document.getElementById("accountStatus");
+const messageEl = document.getElementById("message");
+const tradesEl = document.getElementById("trades");
+
+let currentUser = null;
+
+function money(value) {
+  return Number(value).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + " USD";
+}
+
+async function loadAccount() {
+  messageEl.textContent = "";
+  balanceEl.textContent = "---";
+  tradesEl.textContent = "در حال دریافت اطلاعات...";
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data.user) {
+    statusEl.textContent = "وارد نشده‌اید";
+    messageEl.textContent = "ابتدا وارد حساب شوید.";
+    emailEl.innerHTML = '<a href="./auth.html">رفتن به صفحه ورود</a>';
+    tradesEl.textContent = "برای مشاهده معاملات وارد حساب شوید.";
+    return;
+  }
+
+  currentUser = data.user;
+  emailEl.textContent = currentUser.email || "کاربر";
+  statusEl.textContent = "ورود موفق";
+
+  const { data: account, error: accountError } = await supabase
+    .from("demo_accounts")
+    .select("balance")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (accountError) {
+    messageEl.textContent =
+      "خطا در دریافت موجودی: " + accountError.message;
+  } else if (!account) {
+    messageEl.textContent =
+      "حساب دمو پیدا نشد. باید ایجاد حساب دمو در دیتابیس بررسی شود.";
+  } else {
+    balanceEl.textContent = money(account.balance);
+    messageEl.textContent = "موجودی حساب دمو با موفقیت دریافت شد.";
+  }
+
+  const { data: trades, error: tradesError } = await supabase
+    .from("demo_trades")
+    .select("symbol,side,entry_price,quantity,status,profit_loss,opened_at")
+    .eq("user_id", currentUser.id)
+    .order("opened_at", { ascending: false })
+    .limit(10);
+
+  if (tradesError) {
+    tradesEl.textContent =
+      "خطا در دریافت معاملات: " + tradesError.message;
+    return;
+  }
+
+  if (!trades || trades.length === 0) {
+    tradesEl.textContent = "هنوز معامله دمو ثبت نشده است.";
+    return;
+  }
+
+  tradesEl.replaceChildren();
+
+  for (const trade of trades) {
+    const item = document.createElement("div");
+    item.style.padding = "12px 0";
+    item.style.borderBottom = "1px solid #333";
+
+    const title = document.createElement("strong");
+    title.textContent =
+      `${trade.symbol} | ${trade.side === "LONG" ? "خرید" : "فروش"}`;
+
+    const details = document.createElement("div");
+    details.className = "status";
+    details.textContent =
+      `قیمت ورود: ${trade.entry_price} | حجم: ${trade.quantity}`;
+
+    const state = document.createElement("div");
+    state.className = "status";
+    state.textContent =
+      `وضعیت: ${trade.status === "OPEN" ? "باز" : "بسته"} | سود/ضرر ثبت‌شده: ${money(trade.profit_loss)}`;
+
+    item.append(title, details, state);
+    tradesEl.appendChild(item);
+  }
+}
+
+document.getElementById("refresh").addEventListener("click", loadAccount);
+
+document.getElementById("logout").addEventListener("click", async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    messageEl.textContent = "خطا در خروج: " + error.message;
+    return;
+  }
+
+  location.href = "./auth.html";
+});
+
+loadAccount();
+</script>
+</body>
+</html>
