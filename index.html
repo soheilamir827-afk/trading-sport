@@ -2,39 +2,34 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
-<title>Trading Sport | تریدینگ اسپورت</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1120">
+<title>Trading Sport</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0b1120;color:#f1f5f9;font-family:Tahoma,Arial,sans-serif}
-header{background:#111b2e;padding:18px;text-align:center;border-bottom:1px solid #27354d}
-header h1{margin:0;color:#f87171}
-header p{color:#94a3b8;font-size:12px}
-main{max-width:900px;margin:auto;padding:14px}
-.card{background:#131e31;border:1px solid #29374d;border-radius:16px;padding:16px;margin-bottom:14px}
+header{background:#111b2e;padding:20px;text-align:center;border-bottom:1px solid #29374d}
+header h1{color:#f87171;margin:0}
+header p{font-size:12px;color:#94a3b8}
+main{max-width:950px;margin:auto;padding:12px}
+.card{background:#131e31;border:1px solid #29374d;border-radius:15px;padding:15px;margin-bottom:13px}
 h2{font-size:17px;margin-top:0}
-label{display:block;color:#cbd5e1;font-size:13px;margin:12px 0 6px}
+label{display:block;font-size:13px;color:#cbd5e1;margin:12px 0 6px}
 input,select,button{width:100%;padding:12px;border-radius:9px;border:1px solid #34445e;background:#0b1425;color:white;font-size:14px}
-button{cursor:pointer;border:0;font-weight:bold;margin-top:10px}
-.primary{background:#dc2626}
-.green{background:#15803d}
-.red{background:#b91c1c}
-.blue{background:#1d4ed8}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:#0b1425;padding:12px;border-radius:10px}
-.stat small{color:#94a3b8;display:block;margin-bottom:7px}
-.stat strong{font-size:17px;overflow-wrap:anywhere}
-.muted{color:#94a3b8;font-size:12px;line-height:1.8}
-.price{font-size:14px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{padding:9px;border-bottom:1px solid #29374d;text-align:center}
+button{border:0;cursor:pointer;font-weight:bold;margin-top:10px}
+.green{background:#15803d}.red{background:#b91c1c}.blue{background:#1d4ed8}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stat{padding:12px;background:#0b1425;border-radius:10px;overflow-wrap:anywhere}
+.stat small{display:block;color:#94a3b8;margin-bottom:8px}
+.stat strong{font-size:15px}
+.muted{font-size:12px;color:#94a3b8;line-height:1.9}
 .tablewrap{overflow-x:auto}
-.tag{display:inline-block;background:#25334a;padding:5px 8px;border-radius:7px}
-#message{white-space:pre-wrap;font-size:13px;line-height:1.8}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:450px}
+td,th{text-align:center;padding:10px;border-bottom:1px solid #29374d}
 .good{color:#4ade80}.bad{color:#f87171}
-.hidden{display:none}
+.hidden{display:none!important}
+#message{font-size:13px;line-height:1.8;overflow-wrap:anywhere}
 @media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
 </style>
 </head>
@@ -43,39 +38,39 @@ th,td{padding:9px;border-bottom:1px solid #29374d;text-align:center}
 <h1>🏆 Trading Sport</h1>
 <p>پلتفرم تمرینی معاملات ارز دیجیتال</p>
 </header>
-
 <main>
+
 <section class="card">
 <h2>👤 حساب کاربری</h2>
 <div id="user">در حال بررسی حساب...</div>
 <button id="loginBtn" class="blue">ورود / ثبت‌نام</button>
 <button id="logoutBtn" class="red hidden">خروج از حساب</button>
-<p class="muted">این پلتفرم آزمایشی است؛ معامله واقعی و برداشت وجه ندارد.</p>
+<p class="muted">نسخه دمو است؛ معامله واقعی و برداشت وجه ندارد.</p>
 </section>
 
 <section class="card">
-<h2>💰 موجودی حساب دمو</h2>
+<h2>💰 حساب دمو</h2>
 <div class="grid">
-<div class="stat"><small>موجودی آزاد</small><strong id="balance">در حال بارگذاری...</strong></div>
-<div class="stat"><small>سود و زیان تحقق‌یافته</small><strong id="realized">۰ تومان</strong></div>
-<div class="stat"><small>ارزش تقریبی معاملات باز</small><strong id="openValue">۰ تومان</strong></div>
+<div class="stat"><small>موجودی آزاد</small><strong id="balance">—</strong></div>
+<div class="stat"><small>سود و زیان بسته‌شده</small><strong id="realized">—</strong></div>
+<div class="stat"><small>ارزش معاملات باز</small><strong id="openValue">—</strong></div>
 <div class="stat"><small>وضعیت قیمت‌ها</small><strong id="priceStatus">در حال اتصال</strong></div>
 </div>
 </section>
 
 <section class="card">
 <h2>📊 قیمت ارزها</h2>
-<p class="muted">قیمت‌ها بر اساس داده دریافتی نمایش داده می‌شوند. اگر قیمت ارزی در منبع موجود نباشد، برای آن معامله باز نمی‌شود.</p>
 <div class="tablewrap">
 <table>
-<thead><tr><th>ارز</th><th>قیمت (تومان)</th><th>وضعیت</th></tr></thead>
+<thead><tr><th>ارز</th><th>قیمت تومان</th><th>وضعیت</th></tr></thead>
 <tbody id="prices"></tbody>
 </table>
 </div>
+<p class="muted">قیمت‌ها از APIهای عمومی دریافت می‌شوند. اگر منبعی مسدود یا قطع باشد، قیمت نمایش داده نمی‌شود.</p>
 </section>
 
 <section class="card">
-<h2>📈 باز کردن معامله</h2>
+<h2>📈 بازکردن معامله</h2>
 <div class="formgrid">
 <div>
 <label>ارز دیجیتال</label>
@@ -91,12 +86,14 @@ th,td{padding:9px;border-bottom:1px solid #29374d;text-align:center}
 <option value="ADA">Cardano (ADA)</option>
 <option value="TON">Toncoin (TON)</option>
 </select>
+
 <label>جهت معامله</label>
 <select id="side">
 <option value="LONG">LONG — افزایش قیمت</option>
 <option value="SHORT">SHORT — کاهش قیمت</option>
 </select>
-<label>مبلغ مارجین (تومان)</label>
+
+<label>مارجین (تومان)</label>
 <input id="margin" type="number" min="1" value="100000" inputmode="decimal">
 </div>
 <div>
@@ -109,29 +106,31 @@ th,td{padding:9px;border-bottom:1px solid #29374d;text-align:center}
 <option value="10">۱۰ برابر</option>
 <option value="20">۲۰ برابر</option>
 </select>
-<label>حد ضرر (تومان؛ اختیاری)</label>
-<input id="sl" type="number" min="0" placeholder="مثلاً 0">
-<label>حد سود (تومان؛ اختیاری)</label>
-<input id="tp" type="number" min="0" placeholder="مثلاً 0">
+
+<label>حد ضرر (تومان، اختیاری)</label>
+<input id="sl" type="number" min="0" placeholder="بدون حد ضرر">
+
+<label>حد سود (تومان، اختیاری)</label>
+<input id="tp" type="number" min="0" placeholder="بدون حد سود">
 </div>
 </div>
-<button class="green" id="openBtn">🚀 باز کردن معامله دمو</button>
-<p class="muted">مبلغ مارجین از موجودی آزاد کسر می‌شود. اهرم، اندازه موقعیت را افزایش می‌دهد و ریسک زیان را نیز بیشتر می‌کند.</p>
+<button id="openBtn" class="green">🚀 بازکردن معامله دمو</button>
 <div id="message"></div>
+<p class="muted">مارجین از موجودی آزاد کسر می‌شود. اهرم سود و زیان را افزایش می‌دهد. در این شبیه‌ساز زیان هر معامله حداکثر به مارجین رزروشده محدود شده است.</p>
 </section>
 
 <section class="card">
 <h2>📂 معاملات باز</h2>
 <div class="tablewrap">
 <table>
-<thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>قیمت فعلی</th><th>سود/زیان تقریبی</th><th>عملیات</th></tr></thead>
+<thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>قیمت</th><th>سود/زیان</th><th>عملیات</th></tr></thead>
 <tbody id="openTrades"></tbody>
 </table>
 </div>
 </section>
 
 <section class="card">
-<h2>🧾 تاریخچه معاملات</h2>
+<h2>🧾 تاریخچه</h2>
 <div class="tablewrap">
 <table>
 <thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>خروج</th><th>سود/زیان</th><th>وضعیت</th></tr></thead>
@@ -151,73 +150,70 @@ th,td{padding:9px;border-bottom:1px solid #29374d;text-align:center}
 <option value="XRPUSDT">XRP / USDT</option>
 <option value="DOGEUSDT">DOGE / USDT</option>
 </select>
-<div style="margin-top:12px">
-<iframe id="chart" title="نمودار بازار" src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=0&toolbarbg=131e31&theme=dark&style=1&timezone=Etc%2FUTC" style="width:100%;height:400px;border:0;border-radius:12px" loading="lazy"></iframe>
-</div>
+<iframe id="chart" title="نمودار بازار"
+src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=0&theme=dark&style=1&timezone=Etc%2FUTC"
+style="width:100%;height:400px;border:0;border-radius:12px;margin-top:12px"
+loading="lazy"></iframe>
 </section>
+
 </main>
 
 <script>
-const SUPABASE_URL = "https://iickqivnqqveqgatfowb.supabase.co";
-const SUPABASE_KEY = "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL="https://iickqivnqqveqgatfowb.supabase.co";
+const SUPABASE_KEY="sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const symbols = ["BTC","ETH","USDT","BNB","SOL","XRP","DOGE","TRX","ADA","TON"];
-const prices = {};
-let currentUser = null;
-let account = null;
-let trades = [];
-let checking = false;
+const symbols=["BTC","ETH","USDT","BNB","SOL","XRP","DOGE","TRX","ADA","TON"];
+const prices={};
+let currentUser=null,account=null,trades=[],checking=false;
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString("fa-IR",{maximumFractionDigits:4});
+const money=n=>fmt(n)+" تومان";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-const $ = id => document.getElementById(id);
-const fmt = n => Number(n || 0).toLocaleString("fa-IR",{maximumFractionDigits:4});
-const money = n => fmt(n) + " تومان";
-const escapeHTML = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
-function say(text,ok=false){
-  $("message").innerHTML = '<span class="'+(ok?'good':'bad')+'">'+escapeHTML(text)+'</span>';
+function say(s,ok=false){
+  $("message").innerHTML='<p class="'+(ok?"good":"bad")+'">'+esc(s)+'</p>';
 }
 
-async function sessionCheck(){
-  const {data,error} = await db.auth.getSession();
-  if(error){$("user").textContent="خطا در دریافت نشست";return;}
-  currentUser = data.session?.user || null;
-  updateAuthUI();
-  if(currentUser) await refreshAccount();
-}
-
-function updateAuthUI(){
+function updateAuth(){
+  $("user").textContent=currentUser
+    ?"وارد شده‌ای: "+currentUser.email
+    :"برای معامله دمو وارد حساب شو.";
   $("loginBtn").classList.toggle("hidden",!!currentUser);
   $("logoutBtn").classList.toggle("hidden",!currentUser);
-  $("user").textContent = currentUser
-    ? "وارد شده‌ای: "+currentUser.email
-    : "برای استفاده از معاملات دمو وارد حساب شو.";
 }
 
-$("loginBtn").onclick=()=>{
-  location.href="auth.html";
-};
+$("loginBtn").onclick=()=>location.href="auth.html";
 
 $("logoutBtn").onclick=async()=>{
   await db.auth.signOut();
   currentUser=null;account=null;trades=[];
-  updateAuthUI();
+  updateAuth();
   $("balance").textContent="—";
+  $("realized").textContent="—";
   $("openTrades").innerHTML="";
   $("history").innerHTML="";
 };
 
 db.auth.onAuthStateChange((_event,session)=>{
   currentUser=session?.user||null;
-  updateAuthUI();
-  if(currentUser) setTimeout(refreshAccount,100);
+  updateAuth();
+  if(currentUser)setTimeout(refreshAccount,100);
 });
+
+async function sessionCheck(){
+  const {data,error}=await db.auth.getSession();
+  if(error){say(error.message);return;}
+  currentUser=data.session?.user||null;
+  updateAuth();
+  if(currentUser)await refreshAccount();
+}
 
 async function refreshAccount(){
   if(!currentUser)return;
   const {data,error}=await db.from("demo_accounts")
     .select("*").eq("user_id",currentUser.id).maybeSingle();
-  if(error){say("خطای دریافت حساب: "+error.message);return;}
+  if(error){say("خطای حساب: "+error.message);return;}
   if(!data){say("حساب دمو پیدا نشد.");return;}
   account=data;
   $("balance").textContent=money(data.balance);
@@ -235,34 +231,32 @@ async function refreshTrades(){
   renderTrades();
 }
 
-function pnl(t,price){
-  const direction=t.side==="LONG"?1:-1;
-  return direction*(Number(price)-Number(t.entry_price))*Number(t.quantity);
+function calculatePnl(t,p){
+  return (t.side==="LONG"?1:-1)*(p-Number(t.entry_price))*Number(t.quantity);
 }
 
 function renderTrades(){
   const opened=trades.filter(t=>t.status==="OPEN");
   const closed=trades.filter(t=>t.status!=="OPEN");
+
   $("openTrades").innerHTML=opened.map(t=>{
     const p=Number(prices[t.symbol]||0);
-    const profit=p>0?pnl(t,p):0;
+    const profit=p?calculatePnl(t,p):0;
     return `<tr>
-      <td>${escapeHTML(t.symbol)}</td>
-      <td>${escapeHTML(t.side)}</td>
+      <td>${esc(t.symbol)}</td><td>${esc(t.side)}</td>
       <td>${money(t.entry_price)}</td>
-      <td>${p?money(p):"قیمت ناموجود"}</td>
-      <td class="${profit>=0?'good':'bad'}">${p?money(profit):"—"}</td>
-      <td><button class="red" onclick="closeTrade('${t.id}')">بستن</button></td>
+      <td>${p?money(p):"—"}</td>
+      <td class="${profit>=0?"good":"bad"}">${p?money(profit):"—"}</td>
+      <td><button class="red" onclick="closeTrade('${esc(t.id)}')">بستن</button></td>
     </tr>`;
   }).join("")||'<tr><td colspan="6">معامله بازی وجود ندارد.</td></tr>';
 
   $("history").innerHTML=closed.map(t=>`<tr>
-    <td>${escapeHTML(t.symbol)}</td>
-    <td>${escapeHTML(t.side)}</td>
+    <td>${esc(t.symbol)}</td><td>${esc(t.side)}</td>
     <td>${money(t.entry_price)}</td>
     <td>${t.exit_price?money(t.exit_price):"—"}</td>
-    <td class="${Number(t.profit_loss)>=0?'good':'bad'}">${money(t.profit_loss)}</td>
-    <td>${escapeHTML(t.status)}</td>
+    <td class="${Number(t.profit_loss)>=0?"good":"bad"}">${money(t.profit_loss)}</td>
+    <td>${esc(t.status)}</td>
   </tr>`).join("")||'<tr><td colspan="6">تاریخچه‌ای وجود ندارد.</td></tr>';
 
   const value=opened.reduce((sum,t)=>{
@@ -275,34 +269,58 @@ function renderTrades(){
 async function loadPrices(){
   $("priceStatus").textContent="در حال دریافت";
   try{
-    const url="https://apiv2.nobitex.ir/market/stats?srcCurrency="+symbols.map(s=>s.toLowerCase()).join(",")+"&dstCurrency=rls";
-    const response=await fetch(url,{cache:"no-store"});
-    if(!response.ok)throw new Error("HTTP "+response.status);
-    const json=await response.json();
-    const stats=json.stats||json;
-    for(const s of symbols){
-      const item=stats[s.toLowerCase()+"-rls"]||stats[s.toLowerCase()+"_rls"];
-      if(item){
-        const raw=Number(item.latest||item.bestSell||item.bestBuy||0);
-        if(raw>0)prices[s]=raw/10;
-      }
-    }
+    // نرخ تتر به تومان از نوبیتکس
+    const r=await fetch(
+      "https://apiv2.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls",
+      {cache:"no-store"}
+    );
+    if(!r.ok)throw new Error("نوبیتکس: HTTP "+r.status);
+    const j=await r.json();
+    const st=j.stats||{};
+    const usdt=st["usdt-rls"]||st["usdt_rls"];
+    const usdtToman=Number(usdt?.latest||usdt?.bestSell||usdt?.bestBuy||0)/10;
+    if(!Number.isFinite(usdtToman)||usdtToman<=0)
+      throw new Error("قیمت تتر معتبر نیست.");
+
+    // نرخ دلاری ارزها از Binance
+    const pairs=["BTC","ETH","BNB","SOL","XRP","DOGE","TRX","ADA","TON"]
+      .map(s=>s+"USDT");
+    const url="https://api.binance.com/api/v3/ticker/price?symbols="+
+      encodeURIComponent(JSON.stringify(pairs));
+    const br=await fetch(url,{cache:"no-store"});
+    if(!br.ok)throw new Error("بایننس: HTTP "+br.status);
+    const data=await br.json();
+    if(!Array.isArray(data))throw new Error("پاسخ قیمت نامعتبر است.");
+
+    const next={USDT:usdtToman};
+    data.forEach(item=>{
+      const sym=item.symbol.replace(/USDT$/,"");
+      const p=Number(item.price);
+      if(symbols.includes(sym)&&p>0&&Number.isFinite(p))
+        next[sym]=p*usdtToman;
+    });
+
+    Object.entries(next).forEach(([s,p])=>prices[s]=p);
+
     $("prices").innerHTML=symbols.map(s=>`<tr>
       <td>${s}</td>
       <td>${prices[s]?money(prices[s]):"—"}</td>
       <td>${prices[s]?'<span class="good">متصل</span>':'<span class="bad">ناموجود</span>'}</td>
     </tr>`).join("");
-    $("priceStatus").textContent=Object.keys(prices).length+" ارز";
+
+    $("priceStatus").textContent=Object.keys(prices).length+" از ۱۰ ارز";
     await autoCheckStops();
     renderTrades();
   }catch(e){
+    console.error(e);
     $("priceStatus").textContent="خطا";
-    $("prices").innerHTML='<tr><td colspan="3">دریافت قیمت ناموفق بود. اتصال اینترنت یا منبع قیمت را بررسی کن.</td></tr>';
+    $("prices").innerHTML='<tr><td colspan="3">'+esc(e.message||"دریافت قیمت ناموفق بود")+'</td></tr>';
   }
 }
 
 async function openTrade(){
   if(!currentUser){say("ابتدا وارد حساب کاربری شو.");return;}
+
   const symbol=$("symbol").value;
   const side=$("side").value;
   const margin=Number($("margin").value);
@@ -311,11 +329,16 @@ async function openTrade(){
   const sl=Number($("sl").value)||null;
   const tp=Number($("tp").value)||null;
 
-  if(!price){say("قیمت این ارز در دسترس نیست؛ فعلاً نمی‌توان معامله باز کرد.");return;}
-  if(!Number.isFinite(margin)||margin<=0){say("مبلغ مارجین باید مثبت باشد.");return;}
+  if(!price){say("قیمت این ارز موجود نیست. دریافت قیمت را بررسی کن.");return;}
+  if(!Number.isFinite(margin)||margin<=0){say("مارجین باید مثبت باشد.");return;}
   if(!account||margin>Number(account.balance)){say("موجودی آزاد کافی نیست.");return;}
-  if(sl&&((side==="LONG"&&sl>=price)||(side==="SHORT"&&sl<=price))){say("حد ضرر برای جهت انتخاب‌شده نامعتبر است.");return;}
-  if(tp&&((side==="LONG"&&tp<=price)||(side==="SHORT"&&tp>=price))){say("حد سود برای جهت انتخاب‌شده نامعتبر است.");return;}
+
+  if(sl&&((side==="LONG"&&sl>=price)||(side==="SHORT"&&sl<=price))){
+    say("حد ضرر نسبت به قیمت ورود نامعتبر است.");return;
+  }
+  if(tp&&((side==="LONG"&&tp<=price)||(side==="SHORT"&&tp>=price))){
+    say("حد سود نسبت به قیمت ورود نامعتبر است.");return;
+  }
 
   $("openBtn").disabled=true;
   try{
@@ -324,60 +347,57 @@ async function openTrade(){
       p_leverage:leverage,p_stop_loss:sl,p_take_profit:tp
     });
     if(error)throw error;
-    say("معامله دمو با موفقیت باز شد. شناسه: "+(data.trade_id||""),true);
+    say("معامله دمو باز شد.",true);
     await refreshAccount();
   }catch(e){
-    say("بازکردن معامله ناموفق بود: "+e.message);
+    say("خطای بازکردن معامله: "+e.message);
   }finally{
     $("openBtn").disabled=false;
   }
 }
 
-async function closeTrade(id){
+async function closeTrade(id,automatic=false){
   const t=trades.find(x=>String(x.id)===String(id));
-  if(!t){say("معامله پیدا نشد.");return;}
+  if(!t)return;
   const price=Number(prices[t.symbol]||0);
-  if(!price){say("قیمت فعلی در دسترس نیست؛ بستن معامله ممکن نیست.");return;}
-  if(!confirm("معامله با قیمت فعلی بسته شود؟"))return;
+  if(!price){if(!automatic)say("قیمت فعلی موجود نیست.");return;}
+
+  if(!automatic&&!confirm("معامله با قیمت فعلی بسته شود؟"))return;
+
   try{
     const {data,error}=await db.rpc("close_leverage_trade",{
       p_trade_id:id,p_exit_price:price
     });
     if(error)throw error;
-    say("معامله بسته شد. سود/زیان: "+money(data.profit_loss),true);
+    if(!automatic)say("معامله بسته شد. سود/زیان: "+money(data.profit_loss),true);
     await refreshAccount();
-  }catch(e){say("خطای بستن معامله: "+e.message);}
+  }catch(e){
+    if(!automatic)say("خطای بستن معامله: "+e.message);
+  }
 }
 
 async function autoCheckStops(){
   if(checking||!currentUser)return;
   checking=true;
   try{
-    const opened=trades.filter(t=>t.status==="OPEN");
-    for(const t of opened){
+    for(const t of trades.filter(x=>x.status==="OPEN")){
       const p=Number(prices[t.symbol]||0);
       if(!p)continue;
-      const sl=Number(t.stop_loss||0);
-      const tp=Number(t.take_profit||0);
+      const sl=Number(t.stop_loss||0),tp=Number(t.take_profit||0);
       const hitSL=sl>0&&(t.side==="LONG"?p<=sl:p>=sl);
       const hitTP=tp>0&&(t.side==="LONG"?p>=tp:p<=tp);
-      if(hitSL||hitTP){
-        const {error}=await db.rpc("close_leverage_trade",{
-          p_trade_id:t.id,p_exit_price:p
-        });
-        if(!error){
-          say("معامله "+t.symbol+" به دلیل رسیدن به حد "+(hitSL?"ضرر":"سود")+" بسته شد.",true);
-          await refreshAccount();
-        }
-      }
+      if(hitSL||hitTP)await closeTrade(t.id,true);
     }
   }finally{checking=false;}
 }
 
 $("openBtn").addEventListener("click",openTrade);
+
 $("chartSymbol").addEventListener("change",()=>{
-  const symbol=$("chartSymbol").value;
-  $("chart").src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A"+symbol+"&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=0&toolbarbg=131e31&theme=dark&style=1&timezone=Etc%2FUTC";
+  const sym=$("chartSymbol").value;
+  $("chart").src=
+    "https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A"+sym+
+    "&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=0&theme=dark&style=1&timezone=Etc%2FUTC";
 });
 
 sessionCheck();
@@ -386,4 +406,4 @@ setInterval(loadPrices,15000);
 setInterval(refreshAccount,20000);
 </script>
 </body>
-                   </html>
+  </html>
