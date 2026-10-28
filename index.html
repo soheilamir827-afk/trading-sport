@@ -2,535 +2,833 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101010">
-<meta name="description" content="Trading Sport - شبیه‌ساز معاملات آزمایشی">
-<title>Trading Sport</title>
 
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Trading Sport | تریدینگ اسپورت</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b0b0d;color:#f5f5f5;font-family:Tahoma,Arial,sans-serif;font-size:14px}
-header{background:#151515;padding:15px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
-.logo{font-size:19px;font-weight:bold;color:#e9c46a}
-.container{max-width:850px;margin:auto;padding:12px}
-.card{background:#151517;border:1px solid #29292d;border-radius:14px;padding:15px;margin-bottom:13px}
-h3{margin:0 0 14px;font-size:15px}
-.muted{color:#999;font-size:12px}
-.gold{color:#e9c46a}
-.green{color:#35d59a}
-.red{color:#ff6575}
-.balance{font-size:29px;font-weight:bold;color:#e9c46a;margin:12px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.box{background:#202023;padding:12px;border-radius:10px;min-width:0}
-.price{font-size:18px;font-weight:bold;margin:8px 0;overflow-wrap:anywhere}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.badge{font-size:11px;background:#302817;color:#ffcf66;padding:7px 10px;border-radius:20px}
-label{display:block;color:#aaa;font-size:12px;margin:12px 0 7px}
-input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #353539;background:#202023;color:white;font-size:14px}
-button{border:0;border-radius:9px;padding:12px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:bold}
-button:disabled{opacity:.5}
-.btn{background:#e8bd60;color:#151515;width:100%;margin-top:12px}
-.install{background:#e9c46a;color:#151515}
-.btn-green{background:#167a59;color:white;flex:1}
-.btn-red{background:#a52e3b;color:white;flex:1}
-.btn-gray{background:#303034;color:white}
-.buttons{display:flex;gap:8px;margin-top:12px}
-.notice{background:#292317;color:#e8c978;border-radius:9px;padding:11px;font-size:11px;line-height:2;margin-bottom:13px}
-.chart{height:340px;overflow:hidden;border-radius:10px;background:#101010}
-.chart iframe{width:100%;height:100%;border:0}
-.status{text-align:center;color:#999;font-size:12px;margin-top:10px;line-height:1.8}
-.position{padding:13px 0;border-bottom:1px solid #303034}
-.position:last-child{border-bottom:0}
-.pill{font-size:11px;border-radius:5px;padding:5px 7px;background:#252529}
-.tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{padding:11px 7px;text-align:center;border-bottom:1px solid #303034}
-th{color:#aaa;font-weight:normal}
-footer{text-align:center;color:#777;font-size:11px;padding:20px 10px;line-height:2}
-.hidden{display:none!important}
-@media(max-width:420px){.container{padding:9px}.card{padding:12px}.balance{font-size:25px}.chart{height:290px}}
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#0b0b0d;
+  color:#f5f5f5;
+  font-family:Tahoma,Arial,sans-serif;
+}
+
+button,input,select{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.header{
+  background:#141417;
+  border-bottom:1px solid #333;
+  padding:17px 15px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.header-inner{
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.logo{
+  font-size:19px;
+  font-weight:bold;
+  color:#e9c46a;
+}
+
+.badge{
+  font-size:11px;
+  color:#111;
+  background:#e9c46a;
+  border-radius:20px;
+  padding:7px 10px;
+}
+
+.container{
+  width:100%;
+  max-width:900px;
+  padding:17px;
+  margin:auto;
+}
+
+.notice{
+  background:#292314;
+  color:#f5d98d;
+  border:1px solid #66562b;
+  padding:13px;
+  border-radius:12px;
+  font-size:12px;
+  line-height:2;
+  margin-bottom:16px;
+}
+
+.card{
+  background:#17171b;
+  border:1px solid #303036;
+  border-radius:15px;
+  padding:17px;
+  margin-bottom:15px;
+}
+
+.card-title{
+  font-size:14px;
+  color:#aaa;
+  margin-bottom:14px;
+}
+
+.balance{
+  font-size:27px;
+  font-weight:bold;
+  color:#e9c46a;
+  direction:ltr;
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+.small{
+  font-size:11px;
+  color:#888;
+  line-height:2;
+  margin-top:8px;
+}
+
+.market-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+
+.market{
+  background:#202024;
+  padding:13px 9px;
+  border-radius:12px;
+  min-width:0;
+}
+
+.market-name{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.market-price{
+  font-size:13px;
+  font-weight:bold;
+  color:#e9c46a;
+  margin-top:12px;
+  overflow-wrap:anywhere;
+  direction:ltr;
+  text-align:right;
+}
+
+.market-change{
+  font-size:11px;
+  margin-top:7px;
+}
+
+.green{
+  color:#42d392;
+}
+
+.red{
+  color:#ff6969;
+}
+
+.gray{
+  color:#999;
+}
+
+.status{
+  font-size:12px;
+  line-height:2;
+  color:#aaa;
+}
+
+.form-label{
+  display:block;
+  font-size:13px;
+  color:#bbb;
+  margin:16px 0 8px;
+}
+
+select,input{
+  width:100%;
+  background:#0d0d10;
+  color:#fff;
+  border:1px solid #3b3b42;
+  border-radius:10px;
+  padding:13px;
+  font-size:14px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.buy,.sell{
+  border:0;
+  border-radius:10px;
+  padding:14px 8px;
+  font-size:14px;
+  font-weight:bold;
+  color:white;
+}
+
+.buy{
+  background:#087e54;
+}
+
+.sell{
+  background:#a92e3b;
+}
+
+.secondary{
+  background:#29292f;
+  color:#fff;
+  border:1px solid #414149;
+  border-radius:9px;
+  padding:10px 12px;
+}
+
+.full{
+  width:100%;
+  margin-top:12px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  min-width:430px;
+}
+
+th,td{
+  padding:12px 8px;
+  text-align:right;
+  border-bottom:1px solid #303036;
+  white-space:nowrap;
+}
+
+th{
+  color:#999;
+  font-weight:normal;
+}
+
+.empty{
+  color:#888;
+  text-align:center;
+  padding:20px 5px;
+  font-size:12px;
+}
+
+.footer{
+  text-align:center;
+  font-size:11px;
+  color:#777;
+  padding:20px;
+  line-height:2;
+}
+
+a{
+  color:#e9c46a;
+  text-decoration:none;
+}
+
+#message{
+  font-size:12px;
+  line-height:2;
+  margin-top:12px;
+  overflow-wrap:anywhere;
+}
+
+@media(max-width:420px){
+  .market-grid{
+    grid-template-columns:1fr;
+  }
+
+  .market{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:8px;
+  }
+
+  .market-price{
+    margin-top:0;
+  }
+
+  .market-change{
+    grid-column:1/-1;
+  }
+
+  .balance{
+    font-size:23px;
+  }
+}
 </style>
 </head>
 
 <body>
-<header>
-  <div class="logo">⚡ TRADING SPORT</div>
-  <button class="install" id="installBtn" hidden>⬇ نصب اپلیکیشن</button>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">⚡ TRADING SPORT</div>
+    <span class="badge">حساب دمو</span>
+  </div>
 </header>
 
 <main class="container">
+
   <div class="notice">
-    حساب آزمایشی است؛ این برنامه به کارگزاری متصل نیست و معامله واقعی، واریز یا برداشت پول انجام نمی‌دهد.
+    <strong>حالت آزمایشی</strong><br>
+    قیمت‌ها از API عمومی نوبیتکس دریافت می‌شوند.
+    سفارش‌های این صفحه آزمایشی هستند و به صرافی ارسال نمی‌شوند.
+    موجودی دمو ارزش پولی واقعی ندارد.
   </div>
 
   <section class="card">
-    <div class="row">
-      <span class="muted">موجودی حساب دمو</span>
-      <span class="badge">DEMO USD</span>
+    <div class="card-title">موجودی حساب آزمایشی</div>
+
+    <div class="balance" id="balance">10,000,000 تومان</div>
+
+    <div class="small">
+      سود و زیان تحقق‌یافته:
+      <span id="realized">0 تومان</span>
     </div>
-    <div class="balance" id="balance">$10,000.00</div>
-    <div class="grid">
-      <div>
-        <div class="muted">سود و زیان باز</div>
-        <div class="price" id="totalPnl">$0.00</div>
-      </div>
-      <div>
-        <div class="muted">مارجین استفاده‌شده</div>
-        <div class="price" id="usedMargin">$0.00</div>
-      </div>
+
+    <div class="small">
+      ارزش تقریبی دارایی‌ها:
+      <span id="holdingsValue">0 تومان</span>
     </div>
+
+    <button class="secondary full" id="resetDemo">
+      شروع مجدد حساب دمو
+    </button>
   </section>
 
   <section class="card">
-    <h3>📊 قیمت بازار</h3>
-    <div class="grid">
-      <div class="box">
-        <div class="muted">Bitcoin / USD</div>
-        <div class="price" id="btcPrice">$--</div>
-        <div class="muted" id="btcStatus">در حال دریافت...</div>
+    <div class="card-title">قیمت بازار نوبیتکس</div>
+
+    <div class="market-grid">
+
+      <div class="market">
+        <div>
+          <div class="market-name">₿ بیت‌کوین BTC</div>
+          <div class="small">BTC / تومان</div>
+        </div>
+
+        <div class="market-price" id="btcPrice">در حال دریافت...</div>
+
+        <div class="market-change" id="btcChange">---</div>
       </div>
-      <div class="box">
-        <div class="muted">Ethereum / USD</div>
-        <div class="price" id="ethPrice">$--</div>
-        <div class="muted" id="ethStatus">در حال دریافت...</div>
+
+      <div class="market">
+        <div>
+          <div class="market-name">◆ اتریوم ETH</div>
+          <div class="small">ETH / تومان</div>
+        </div>
+
+        <div class="market-price" id="ethPrice">در حال دریافت...</div>
+
+        <div class="market-change" id="ethChange">---</div>
       </div>
-      <div class="box">
-        <div class="muted">Gold / USD</div>
-        <div class="price" id="goldPrice">$4,008.40</div>
-        <div class="muted">قیمت نمونه، زنده نیست</div>
+
+      <div class="market">
+        <div>
+          <div class="market-name">₮ تتر USDT</div>
+          <div class="small">USDT / تومان</div>
+        </div>
+
+        <div class="market-price" id="usdtPrice">در حال دریافت...</div>
+
+        <div class="market-change" id="usdtChange">---</div>
       </div>
-      <div class="box">
-        <div class="muted">نوع حساب</div>
-        <div class="price gold">DEMO</div>
-        <div class="muted">آزمایشی</div>
-      </div>
+
     </div>
-    <div class="status" id="lastUpdate">در انتظار قیمت بازار</div>
-    <button class="btn-gray" style="width:100%;margin-top:12px" id="refreshBtn">↻ به‌روزرسانی قیمت‌ها</button>
+
+    <div class="status" style="margin-top:15px">
+      وضعیت اتصال:
+      <span id="connection" class="gray">در حال اتصال...</span>
+    </div>
+
+    <div class="status">
+      آخرین به‌روزرسانی:
+      <span id="updatedAt">---</span>
+    </div>
+
+    <button class="secondary full" id="refreshPrices">
+      دریافت دوباره قیمت‌ها
+    </button>
   </section>
 
   <section class="card">
-    <h3>📈 نمودار</h3>
-    <div class="chart">
-      <iframe id="chartFrame" title="نمودار بازار" loading="lazy"
-       src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&hidesidetoolbar=1&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en">
-      </iframe>
-    </div>
-    <label>انتخاب دارایی نمودار</label>
-    <select id="chartSelect">
-      <option value="BINANCE:BTCUSDT">بیت‌کوین</option>
-      <option value="BINANCE:ETHUSDT">اتریوم</option>
-      <option value="OANDA:XAUUSD">طلای جهانی</option>
+    <div class="card-title">ثبت معامله آزمایشی</div>
+
+    <label class="form-label" for="symbol">انتخاب بازار</label>
+
+    <select id="symbol">
+      <option value="btc">بیت‌کوین BTC</option>
+      <option value="eth">اتریوم ETH</option>
+      <option value="usdt">تتر USDT</option>
     </select>
-  </section>
 
-  <section class="card">
-    <h3>🎯 معامله آزمایشی</h3>
-    <label>دارایی</label>
-    <select id="asset">
-      <option value="BTCUSDT">Bitcoin / BTC</option>
-      <option value="ETHUSDT">Ethereum / ETH</option>
-      <option value="XAUUSD">Gold / XAU</option>
-    </select>
+    <label class="form-label" for="amount">
+      مبلغ معامله به تومان
+    </label>
 
-    <label>مبلغ مارجین (دلار)</label>
-    <input id="margin" type="number" min="1" step="1" value="100">
+    <input
+      id="amount"
+      type="number"
+      min="1000"
+      step="1000"
+      value="100000"
+      inputmode="numeric"
+    >
 
-    <label>اهرم</label>
-    <select id="leverage">
-      <option value="1">1x</option>
-      <option value="2">2x</option>
-      <option value="5" selected>5x</option>
-      <option value="10">10x</option>
-      <option value="20">20x</option>
-    </select>
-
-    <label>حد سود (اختیاری؛ قیمت دارایی)</label>
-    <input id="takeProfit" type="number" min="0" step="any" placeholder="مثلاً 75000">
-
-    <label>حد ضرر (اختیاری؛ قیمت دارایی)</label>
-    <input id="stopLoss" type="number" min="0" step="any" placeholder="مثلاً 65000">
-
-    <div class="buttons">
-      <button class="btn-green" id="longBtn">🟢 خرید / LONG</button>
-      <button class="btn-red" id="shortBtn">🔴 فروش / SHORT</button>
+    <div class="small">
+      قیمت معامله بر اساس آخرین قیمت دریافت‌شده محاسبه می‌شود.
+      مبلغ باید از موجودی دمو کمتر یا مساوی باشد.
     </div>
-    <div class="status" id="tradeMessage"></div>
-  </section>
 
-  <section class="card">
-    <div class="row">
-      <h3 style="margin:0">📂 معاملات باز</h3>
-      <span class="badge" id="openCount">0</span>
+    <div class="actions">
+      <button class="buy" id="buyBtn">خرید دمو</button>
+      <button class="sell" id="sellBtn">فروش دمو</button>
     </div>
-    <div id="positions"><p class="muted">هنوز معامله‌ای باز نیست.</p></div>
+
+    <div id="message"></div>
   </section>
 
   <section class="card">
-    <h3>📜 تاریخچه معاملات</h3>
-    <div class="tablewrap">
+    <div class="card-title">دارایی‌های آزمایشی</div>
+
+    <div class="table-wrap">
       <table>
-        <thead><tr><th>دارایی</th><th>جهت</th><th>سود/ضرر</th><th>نتیجه</th></tr></thead>
-        <tbody id="history"><tr><td colspan="4">تاریخچه خالی است.</td></tr></tbody>
+        <thead>
+          <tr>
+            <th>دارایی</th>
+            <th>مقدار</th>
+            <th>ارزش تقریبی</th>
+          </tr>
+        </thead>
+
+        <tbody id="holdingsBody"></tbody>
       </table>
     </div>
   </section>
 
   <section class="card">
-    <h3>⚙️ تنظیمات حساب</h3>
-    <p class="muted">بازنشانی، موجودی را به ۱۰٬۰۰۰ دلار برمی‌گرداند و تاریخچه را پاک می‌کند.</p>
-    <button class="btn-gray" style="width:100%" id="resetBtn">بازنشانی حساب دمو</button>
+    <div class="card-title">تاریخچه معاملات دمو</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>زمان</th>
+            <th>بازار</th>
+            <th>عملیات</th>
+            <th>مبلغ</th>
+            <th>قیمت</th>
+          </tr>
+        </thead>
+
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+
+    <div id="emptyHistory" class="empty">
+      هنوز معامله‌ای انجام نداده‌ای.
+    </div>
   </section>
+
+  <section class="card">
+    <div class="card-title">حساب کاربری</div>
+
+    <div class="status">
+      برای ورود و ثبت‌نام در Trading Sport از لینک زیر استفاده کن.
+    </div>
+
+    <a class="secondary full"
+       style="display:block;text-align:center"
+       href="./auth.html">
+      ورود / ثبت‌نام
+    </a>
+
+    <a class="secondary full"
+       style="display:block;text-align:center"
+       href="./account.html">
+      مشاهده صفحه حساب کاربری
+    </a>
+  </section>
+
 </main>
 
-<footer>
-  Trading Sport © 2026<br>
-  شبیه‌ساز آموزشی معاملات — بدون اتصال به کارگزاری
+<footer class="footer">
+  Trading Sport<br>
+  قیمت بازار با داده‌های عمومی نوبیتکس دریافت می‌شود.<br>
+  معاملات این نسخه شبیه‌سازی شده‌اند و سفارش واقعی ارسال نمی‌شود.
 </footer>
 
 <script>
 "use strict";
 
-const KEY = "tradingSportDemoV8";
-const START_BALANCE = 10000;
-const GOLD_PRICE = 4008.40;
-let installPrompt = null;
-let refreshing = false;
+const API_URL =
+  "https://apiv2.nobitex.ir/market/stats?srcCurrency=btc,eth,usdt&dstCurrency=rls";
 
-function freshState(){
+const STORAGE_KEY = "tradingSportDemoV1";
+
+const ASSETS = {
+  btc: { name: "BTC", market: "btc-rls" },
+  eth: { name: "ETH", market: "eth-rls" },
+  usdt: { name: "USDT", market: "usdt-rls" }
+};
+
+let prices = {
+  btc: null,
+  eth: null,
+  usdt: null
+};
+
+let changes = {
+  btc: null,
+  eth: null,
+  usdt: null
+};
+
+function newDemo() {
   return {
-    balance:START_BALANCE,
-    prices:{BTCUSDT:null,ETHUSDT:null,XAUUSD:GOLD_PRICE},
-    positions:[],
-    history:[],
-    nextId:1
+    balance: 10000000,
+    realized: 0,
+    holdings: {
+      btc: 0,
+      eth: 0,
+      usdt: 0
+    },
+    history: []
   };
 }
 
-function loadState(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    if(!raw) return freshState();
-    const s = JSON.parse(raw);
-    if(!s || !Number.isFinite(s.balance) ||
-       !Array.isArray(s.positions) || !Array.isArray(s.history)){
-      return freshState();
+function loadDemo() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+
+    if (!raw) return newDemo();
+
+    const parsed = JSON.parse(raw);
+
+    if (
+      typeof parsed.balance !== "number" ||
+      !parsed.holdings ||
+      !Array.isArray(parsed.history)
+    ) {
+      return newDemo();
     }
-    s.prices = s.prices || {};
-    s.prices.XAUUSD = GOLD_PRICE;
-    s.nextId = Number(s.nextId) || 1;
-    return s;
-  }catch(e){
-    return freshState();
+
+    return parsed;
+  } catch {
+    return newDemo();
   }
 }
 
-let state = loadState();
+let demo = loadDemo();
 
-function save(){
-  try{localStorage.setItem(KEY,JSON.stringify(state));}
-  catch(e){console.warn("ذخیره محلی در دسترس نیست");}
+function saveDemo() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
 }
 
-function money(n){
-  if(!Number.isFinite(n)) return "$--";
-  return (n < 0 ? "-$" : "$") +
-    Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+function toman(value) {
+  return Number(value).toLocaleString("fa-IR", {
+    maximumFractionDigits: 2
+  }) + " تومان";
 }
 
-function priceText(n){
-  if(!Number.isFinite(n) || n <= 0) return "$--";
-  return "$" + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function assetName(a){
-  return a === "BTCUSDT" ? "BTC" : a === "ETHUSDT" ? "ETH" : "GOLD";
-}
-
-function currentPrice(a){
-  return a === "XAUUSD" ? GOLD_PRICE : Number(state.prices[a]) || null;
-}
-
-function status(id,text,ok){
-  const e = document.getElementById(id);
-  e.textContent = text;
-  e.className = ok ? "muted green" : "muted red";
-}
-
-async function timeoutFetch(url){
-  const controller = new AbortController();
-  const timer = setTimeout(()=>controller.abort(),8000);
-  try{
-    const r = await fetch(url,{cache:"no-store",signal:controller.signal});
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    return await r.json();
-  }finally{
-    clearTimeout(timer);
-  }
-}
-
-async function fetchPrice(asset,symbol){
-  const priceId = asset === "BTCUSDT" ? "btcPrice" : "ethPrice";
-  const statusId = asset === "BTCUSDT" ? "btcStatus" : "ethStatus";
-  status(statusId,"در حال دریافت قیمت...",true);
-
-  const sources = [
-    async()=>{
-      const d = await timeoutFetch(
-        "https://api.binance.com/api/v3/ticker/price?symbol="+encodeURIComponent(symbol)
-      );
-      return Number(d.price);
-    },
-    async()=>{
-      const coin = asset === "BTCUSDT" ? "bitcoin" : "ethereum";
-      const d = await timeoutFetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids="+coin+"&vs_currencies=usd"
-      );
-      return Number(d[coin].usd);
-    }
-  ];
-
-  for(const source of sources){
-    try{
-      const p = await source();
-      if(!Number.isFinite(p) || p <= 0) throw new Error("قیمت نامعتبر");
-      state.prices[asset] = p;
-      document.getElementById(priceId).textContent = priceText(p);
-      status(statusId,"● قیمت دریافت شد",true);
-      save();
-      return true;
-    }catch(e){
-      console.warn("منبع قیمت در دسترس نیست",e);
-    }
-  }
-
-  state.prices[asset] = null;
-  document.getElementById(priceId).textContent = "$--";
-  status(statusId,"قیمت دریافت نشد؛ اتصال را بررسی کن",false);
-  return false;
-}
-
-async function refreshPrices(){
-  if(refreshing) return;
-  refreshing = true;
-  try{
-    await Promise.all([
-      fetchPrice("BTCUSDT","BTCUSDT"),
-      fetchPrice("ETHUSDT","ETHUSDT")
-    ]);
-    document.getElementById("lastUpdate").textContent =
-      "آخرین بررسی: "+new Date().toLocaleTimeString("fa-IR");
-    checkStops();
-    render();
-  }finally{
-    refreshing = false;
-  }
-}
-
-function changeChart(){
-  const symbol = document.getElementById("chartSelect").value;
-  const url = "https://s.tradingview.com/widgetembed/?symbol="+
-    encodeURIComponent(symbol)+
-    "&interval=15&hidesidetoolbar=1&symboledit=1&theme=dark&style=1"+
-    "&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=en";
-  document.getElementById("chartFrame").src = url;
-}
-
-function openTrade(direction){
-  const asset = document.getElementById("asset").value;
-  const price = currentPrice(asset);
-  const margin = Number(document.getElementById("margin").value);
-  const leverage = Number(document.getElementById("leverage").value);
-  const tpText = document.getElementById("takeProfit").value.trim();
-  const slText = document.getElementById("stopLoss").value.trim();
-  const tp = tpText === "" ? null : Number(tpText);
-  const sl = slText === "" ? null : Number(slText);
-  const msg = document.getElementById("tradeMessage");
-
-  function error(text){
-    msg.textContent = text;
-    msg.className = "status red";
-  }
-
-  if(!price) return error("قیمت دریافت نشده؛ اتصال قیمت را بررسی کن.");
-  if(!Number.isFinite(margin) || margin <= 0) return error("مبلغ مارجین معتبر نیست.");
-  if(margin > state.balance) return error("موجودی کافی نیست.");
-  if(!Number.isFinite(leverage) || leverage < 1) return error("اهرم معتبر نیست.");
-  if(tp !== null && (!Number.isFinite(tp) || tp <= 0)) return error("حد سود معتبر نیست.");
-  if(sl !== null && (!Number.isFinite(sl) || sl <= 0)) return error("حد ضرر معتبر نیست.");
-
-  if(direction === "LONG"){
-    if(tp !== null && tp <= price) return error("حد سود خرید باید بالاتر از قیمت فعلی باشد.");
-    if(sl !== null && sl >= price) return error("حد ضرر خرید باید پایین‌تر از قیمت فعلی باشد.");
-  }else{
-    if(tp !== null && tp >= price) return error("حد سود فروش باید پایین‌تر از قیمت فعلی باشد.");
-    if(sl !== null && sl <= price) return error("حد ضرر فروش باید بالاتر از قیمت فعلی باشد.");
-  }
-
-  const used = state.positions.reduce((sum,p)=>sum+p.margin,0);
-  if(margin > state.balance-used) return error("مارجین آزاد کافی نیست.");
-
-  state.positions.unshift({
-    id:state.nextId++,
-    asset,direction,entry:price,margin,leverage,
-    quantity:margin*leverage/price,
-    tp,sl,
-    openedAt:new Date().toISOString()
+function quantity(value) {
+  return Number(value).toLocaleString("en-US", {
+    maximumFractionDigits: 8
   });
-
-  msg.textContent = "معامله آزمایشی باز شد.";
-  msg.className = "status green";
-  save();
-  render();
 }
 
-function pnl(p){
-  const now = currentPrice(p.asset);
-  if(!now) return 0;
-  const diff = p.direction === "LONG" ? now-p.entry : p.entry-now;
-  return diff*p.quantity;
+function safeNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
 }
 
-function closeTrade(id,reason){
-  const i = state.positions.findIndex(p=>p.id===id);
-  if(i < 0) return;
-  const p = state.positions[i];
-  const result = pnl(p);
-
-  state.balance += p.margin+result;
-  state.history.unshift({
-    asset:p.asset,
-    direction:p.direction,
-    pnl:result,
-    reason:reason || "بستن دستی",
-    closedAt:new Date().toISOString()
-  });
-
-  state.history = state.history.slice(0,100);
-  state.positions.splice(i,1);
-  save();
-  render();
+function showMessage(text, success) {
+  const el = document.getElementById("message");
+  el.textContent = text;
+  el.className = success ? "green" : "red";
 }
 
-function checkStops(){
-  for(const p of [...state.positions]){
-    const now = currentPrice(p.asset);
-    if(!now) continue;
+function renderDemo() {
+  document.getElementById("balance").textContent =
+    toman(demo.balance);
 
-    if(p.direction === "LONG"){
-      if(p.tp !== null && now >= p.tp) closeTrade(p.id,"حد سود");
-      else if(p.sl !== null && now <= p.sl) closeTrade(p.id,"حد ضرر");
-    }else{
-      if(p.tp !== null && now <= p.tp) closeTrade(p.id,"حد سود");
-      else if(p.sl !== null && now >= p.sl) closeTrade(p.id,"حد ضرر");
+  document.getElementById("realized").textContent =
+    toman(demo.realized);
+
+  let totalValue = 0;
+
+  for (const key of Object.keys(ASSETS)) {
+    if (prices[key] !== null) {
+      totalValue += demo.holdings[key] * prices[key];
     }
   }
-}
 
-function render(){
-  const used = state.positions.reduce((s,p)=>s+p.margin,0);
-  const total = state.positions.reduce((s,p)=>s+pnl(p),0);
+  document.getElementById("holdingsValue").textContent =
+    toman(totalValue);
 
-  document.getElementById("balance").textContent = money(state.balance);
-  document.getElementById("usedMargin").textContent = money(used);
+  const holdingsBody = document.getElementById("holdingsBody");
+  holdingsBody.replaceChildren();
 
-  const pnlEl = document.getElementById("totalPnl");
-  pnlEl.textContent = money(total);
-  pnlEl.className = "price "+(total >= 0 ? "green" : "red");
-  document.getElementById("openCount").textContent = state.positions.length;
+  for (const key of Object.keys(ASSETS)) {
+    const tr = document.createElement("tr");
 
-  const box = document.getElementById("positions");
+    const values = [
+      ASSETS[key].name,
+      quantity(demo.holdings[key]),
+      prices[key] === null
+        ? "---"
+        : toman(demo.holdings[key] * prices[key])
+    ];
 
-  if(!state.positions.length){
-    box.innerHTML = '<p class="muted">هنوز معامله‌ای باز نیست.</p>';
-  }else{
-    box.innerHTML = state.positions.map(p=>{
-      const now = currentPrice(p.asset);
-      const result = pnl(p);
-      return `
-      <div class="position">
-        <div class="row">
-          <strong>${assetName(p.asset)} · ${p.direction==="LONG"?"🟢 خرید":"🔴 فروش"}</strong>
-          <span class="badge">${p.leverage}x</span>
-        </div>
-        <div class="grid" style="margin-top:12px">
-          <div><div class="muted">ورود</div><div style="margin-top:6px">${priceText(p.entry)}</div></div>
-          <div><div class="muted">قیمت فعلی</div><div style="margin-top:6px">${priceText(now)}</div></div>
-          <div><div class="muted">مارجین</div><div style="margin-top:6px">${money(p.margin)}</div></div>
-          <div><div class="muted">سود/زیان باز</div><div class="${result>=0?"green":"red"}" style="margin-top:6px">${money(result)}</div></div>
-        </div>
-        <p class="muted">حد سود: ${p.tp===null?"تنظیم نشده":priceText(p.tp)} · حد ضرر: ${p.sl===null?"تنظیم نشده":priceText(p.sl)}</p>
-        <button class="btn-gray" style="width:100%" onclick="closeTrade(${p.id},'بستن دستی')">بستن معامله</button>
-      </div>`;
-    }).join("");
+    for (const value of values) {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    }
+
+    holdingsBody.appendChild(tr);
   }
 
-  const history = document.getElementById("history");
+  const historyBody = document.getElementById("historyBody");
+  historyBody.replaceChildren();
 
-  if(!state.history.length){
-    history.innerHTML = '<tr><td colspan="4" class="muted">تاریخچه خالی است.</td></tr>';
-  }else{
-    history.innerHTML = state.history.slice(0,50).map(h=>`
-      <tr>
-        <td>${assetName(h.asset)}</td>
-        <td>${h.direction==="LONG"?"خرید":"فروش"}</td>
-        <td class="${h.pnl>=0?"green":"red"}">${money(h.pnl)}</td>
-        <td>${h.reason}</td>
-      </tr>
-    `).join("");
+  document.getElementById("emptyHistory").style.display =
+    demo.history.length ? "none" : "block";
+
+  for (const trade of demo.history.slice(0, 50)) {
+    const tr = document.createElement("tr");
+
+    const values = [
+      trade.time,
+      trade.symbol.toUpperCase(),
+      trade.side === "BUY" ? "خرید دمو" : "فروش دمو",
+      toman(trade.amount),
+      toman(trade.price)
+    ];
+
+    for (const value of values) {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    }
+
+    historyBody.appendChild(tr);
   }
 }
 
-function resetDemo(){
-  if(!confirm("حساب دمو و تمام تاریخچه پاک شود؟")) return;
-  state = freshState();
-  save();
-  render();
-  refreshPrices();
-}
+function renderPrice(key, priceId, changeId) {
+  const priceEl = document.getElementById(priceId);
+  const changeEl = document.getElementById(changeId);
 
-document.getElementById("longBtn").addEventListener("click",()=>openTrade("LONG"));
-document.getElementById("shortBtn").addEventListener("click",()=>openTrade("SHORT"));
-document.getElementById("refreshBtn").addEventListener("click",refreshPrices);
-document.getElementById("resetBtn").addEventListener("click",resetDemo);
-document.getElementById("chartSelect").addEventListener("change",changeChart);
-
-window.addEventListener("beforeinstallprompt",event=>{
-  event.preventDefault();
-  installPrompt = event;
-  document.getElementById("installBtn").hidden = false;
-});
-
-document.getElementById("installBtn").addEventListener("click",async()=>{
-  if(!installPrompt){
-    alert("اگر نصب خودکار در دسترس نیست، منوی سه‌نقطه مرورگر را باز کن و گزینه Add to Home screen یا Install app را انتخاب کن.");
+  if (prices[key] === null) {
+    priceEl.textContent = "---";
+    changeEl.textContent = "قیمت در دسترس نیست";
+    changeEl.className = "market-change gray";
     return;
   }
 
-  installPrompt.prompt();
-  await installPrompt.userChoice;
-  installPrompt = null;
-  document.getElementById("installBtn").hidden = true;
-});
+  priceEl.textContent = toman(prices[key]);
 
-window.addEventListener("appinstalled",()=>{
-  document.getElementById("installBtn").hidden = true;
-});
+  const change = changes[key];
 
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js").catch(err=>{
-      console.log("Service Worker:",err);
-    });
-  });
+  if (change !== null) {
+    const sign = change > 0 ? "+" : "";
+
+    changeEl.textContent =
+      sign + change.toLocaleString("fa-IR") + "% تغییر روزانه";
+
+    changeEl.className =
+      "market-change " +
+      (change > 0 ? "green" : change < 0 ? "red" : "gray");
+  } else {
+    changeEl.textContent = "تغییر روزانه موجود نیست";
+    changeEl.className = "market-change gray";
+  }
 }
 
-render();
-refreshPrices();
-setInterval(refreshPrices,20000);
+async function updatePrices() {
+  const connection = document.getElementById("connection");
+
+  connection.textContent = "در حال دریافت قیمت‌ها...";
+  connection.className = "gray";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    if (data.status !== "ok" || !data.stats) {
+      throw new Error("پاسخ API معتبر نیست");
+    }
+
+    for (const key of Object.keys(ASSETS)) {
+      const item = data.stats[ASSETS[key].market];
+
+      if (item && Number(item.latest) > 0) {
+        // قیمت API به ریال است؛ تقسیم بر ۱۰ = تومان
+        prices[key] = Number(item.latest) / 10;
+
+        const change = Number(item.dayChange);
+
+        changes[key] = Number.isFinite(change) ? change : null;
+      }
+    }
+
+    renderPrice("btc", "btcPrice", "btcChange");
+    renderPrice("eth", "ethPrice", "ethChange");
+    renderPrice("usdt", "usdtPrice", "usdtChange");
+
+    connection.textContent = "دریافت موفق از نوبیتکس";
+    connection.className = "green";
+
+    document.getElementById("updatedAt").textContent =
+      new Date().toLocaleTimeString("fa-IR");
+
+    renderDemo();
+
+  } catch (error) {
+    console.error(error);
+
+    connection.textContent =
+      "دریافت قیمت ناموفق بود؛ اتصال یا API را بررسی کن.";
+
+    connection.className = "red";
+  }
+}
+
+function trade(side) {
+  const key = document.getElementById("symbol").value;
+  const amount = Number(document.getElementById("amount").value);
+  const price = prices[key];
+
+  if (price === null || !Number.isFinite(price) || price <= 0) {
+    showMessage("ابتدا باید قیمت معتبر بازار دریافت شود.", false);
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    showMessage("مبلغ معامله را درست وارد کن.", false);
+    return;
+  }
+
+  if (side === "BUY") {
+    if (amount > demo.balance) {
+      showMessage("موجودی دمو برای این خرید کافی نیست.", false);
+      return;
+    }
+
+    const qty = amount / price;
+
+    demo.balance -= amount;
+    demo.holdings[key] += qty;
+
+  } else {
+    const qty = amount / price;
+
+    if (qty > demo.holdings[key]) {
+      showMessage(
+        "دارایی کافی برای فروش نداری. ابتدا مقدار کمتری انتخاب کن.",
+        false
+      );
+      return;
+    }
+
+    demo.holdings[key] -= qty;
+    demo.balance += amount;
+    demo.realized += 0;
+  }
+
+  demo.history.unshift({
+    time: new Date().toLocaleString("fa-IR"),
+    symbol: key,
+    side: side,
+    amount: amount,
+    price: price
+  });
+
+  demo.history = demo.history.slice(0, 100);
+
+  saveDemo();
+  renderDemo();
+
+  showMessage(
+    side === "BUY"
+      ? "خرید آزمایشی ثبت شد؛ هیچ سفارش واقعی ارسال نشده است."
+      : "فروش آزمایشی ثبت شد؛ هیچ سفارش واقعی ارسال نشده است.",
+    true
+  );
+}
+
+document.getElementById("buyBtn").addEventListener("click", () => {
+  trade("BUY");
+});
+
+document.getElementById("sellBtn").addEventListener("click", () => {
+  trade("SELL");
+});
+
+document.getElementById("refreshPrices").addEventListener("click", () => {
+  updatePrices();
+});
+
+document.getElementById("resetDemo").addEventListener("click", () => {
+  const ok = confirm(
+    "حساب دمو و تاریخچه معاملات آزمایشی از این مرورگر پاک شود؟"
+  );
+
+  if (!ok) return;
+
+  demo = newDemo();
+  saveDemo();
+  renderDemo();
+
+  showMessage("حساب دمو از نو شروع شد.", true);
+});
+
+renderDemo();
+updatePrices();
+
+// به‌روزرسانی خودکار هر ۶۰ ثانیه
+setInterval(updatePrices, 60000);
 </script>
+
 </body>
 </html>
