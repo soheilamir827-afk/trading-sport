@@ -2,833 +2,515 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101010">
-
 <title>Trading Sport | تریدینگ اسپورت</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{
-  box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
-  margin:0;
-  background:#0b0b0d;
-  color:#f5f5f5;
-  font-family:Tahoma,Arial,sans-serif;
+  margin:0;background:#0b0d10;color:#f5f5f5;
+  font-family:Tahoma,Arial,sans-serif
 }
-
-button,input,select{
-  font-family:inherit;
+header{
+  background:#12151a;padding:18px 14px;
+  border-bottom:1px solid #30343b
 }
-
-button{
-  cursor:pointer;
-}
-
-.header{
-  background:#141417;
-  border-bottom:1px solid #333;
-  padding:17px 15px;
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-
-.header-inner{
-  max-width:900px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.logo{
-  font-size:19px;
-  font-weight:bold;
-  color:#e9c46a;
-}
-
-.badge{
-  font-size:11px;
-  color:#111;
-  background:#e9c46a;
-  border-radius:20px;
-  padding:7px 10px;
-}
-
-.container{
-  width:100%;
-  max-width:900px;
-  padding:17px;
-  margin:auto;
-}
-
-.notice{
-  background:#292314;
-  color:#f5d98d;
-  border:1px solid #66562b;
-  padding:13px;
-  border-radius:12px;
-  font-size:12px;
-  line-height:2;
-  margin-bottom:16px;
-}
-
+h1{font-size:23px;color:#f0bd55;margin:0 0 8px}
+.subtitle{color:#aaa;font-size:12px}
+.container{max-width:650px;margin:auto;padding:14px}
 .card{
-  background:#17171b;
-  border:1px solid #303036;
-  border-radius:15px;
-  padding:17px;
-  margin-bottom:15px;
+  background:#15191f;border:1px solid #292e37;
+  border-radius:15px;padding:15px;margin-bottom:13px
 }
-
-.card-title{
-  font-size:14px;
-  color:#aaa;
-  margin-bottom:14px;
+.title{font-size:16px;font-weight:bold;margin-bottom:13px}
+.balance{font-size:26px;color:#f0bd55;font-weight:bold}
+.muted{color:#999;font-size:12px;line-height:1.9}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.coin{
+  flex:1;min-width:130px;background:#1c222b;
+  padding:13px;border-radius:12px;margin-bottom:5px
 }
-
-.balance{
-  font-size:27px;
-  font-weight:bold;
-  color:#e9c46a;
-  direction:ltr;
-  text-align:right;
-  overflow-wrap:anywhere;
+.coin b{display:block;margin-bottom:9px}
+.price{font-size:16px;color:#f0bd55;direction:ltr;text-align:right}
+input,select,button{
+  width:100%;padding:13px;border-radius:9px;
+  border:1px solid #353c47;background:#101318;
+  color:#fff;font-family:inherit;font-size:14px;margin:5px 0
 }
-
-.small{
-  font-size:11px;
-  color:#888;
-  line-height:2;
-  margin-top:8px;
-}
-
-.market-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:9px;
-}
-
-.market{
-  background:#202024;
-  padding:13px 9px;
-  border-radius:12px;
-  min-width:0;
-}
-
-.market-name{
-  font-size:12px;
-  font-weight:bold;
-}
-
-.market-price{
-  font-size:13px;
-  font-weight:bold;
-  color:#e9c46a;
-  margin-top:12px;
-  overflow-wrap:anywhere;
-  direction:ltr;
-  text-align:right;
-}
-
-.market-change{
-  font-size:11px;
-  margin-top:7px;
-}
-
-.green{
-  color:#42d392;
-}
-
-.red{
-  color:#ff6969;
-}
-
-.gray{
-  color:#999;
-}
-
-.status{
-  font-size:12px;
-  line-height:2;
-  color:#aaa;
-}
-
-.form-label{
-  display:block;
-  font-size:13px;
-  color:#bbb;
-  margin:16px 0 8px;
-}
-
-select,input{
-  width:100%;
-  background:#0d0d10;
-  color:#fff;
-  border:1px solid #3b3b42;
-  border-radius:10px;
-  padding:13px;
-  font-size:14px;
-}
-
-.actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:15px;
-}
-
-.buy,.sell{
-  border:0;
-  border-radius:10px;
-  padding:14px 8px;
-  font-size:14px;
-  font-weight:bold;
-  color:white;
-}
-
-.buy{
-  background:#087e54;
-}
-
-.sell{
-  background:#a92e3b;
-}
-
-.secondary{
-  background:#29292f;
-  color:#fff;
-  border:1px solid #414149;
-  border-radius:9px;
-  padding:10px 12px;
-}
-
-.full{
-  width:100%;
-  margin-top:12px;
-}
-
-.table-wrap{
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
-  min-width:430px;
-}
-
-th,td{
-  padding:12px 8px;
-  text-align:right;
-  border-bottom:1px solid #303036;
-  white-space:nowrap;
-}
-
-th{
-  color:#999;
-  font-weight:normal;
-}
-
-.empty{
-  color:#888;
-  text-align:center;
-  padding:20px 5px;
-  font-size:12px;
-}
-
-.footer{
-  text-align:center;
-  font-size:11px;
-  color:#777;
-  padding:20px;
-  line-height:2;
-}
-
-a{
-  color:#e9c46a;
-  text-decoration:none;
-}
-
-#message{
-  font-size:12px;
-  line-height:2;
-  margin-top:12px;
-  overflow-wrap:anywhere;
-}
-
-@media(max-width:420px){
-  .market-grid{
-    grid-template-columns:1fr;
-  }
-
-  .market{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    align-items:center;
-    gap:8px;
-  }
-
-  .market-price{
-    margin-top:0;
-  }
-
-  .market-change{
-    grid-column:1/-1;
-  }
-
-  .balance{
-    font-size:23px;
-  }
-}
+button{background:#e6ad43;color:#111;font-weight:bold;border:0;cursor:pointer}
+button:disabled{opacity:.5}
+.green{background:#16a36a;color:#fff}
+.red{background:#d84444;color:#fff}
+.gray{background:#303640;color:#fff}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.status{font-size:12px;color:#f0bd55;line-height:2}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:10px 5px;border-bottom:1px solid #30343b;text-align:center}
+.tablewrap{overflow-x:auto}
+a{color:#f0bd55;text-decoration:none}
+footer{text-align:center;padding:18px;color:#777;font-size:11px}
 </style>
 </head>
 
 <body>
-
-<header class="header">
-  <div class="header-inner">
-    <div class="logo">⚡ TRADING SPORT</div>
-    <span class="badge">حساب دمو</span>
-  </div>
+<header>
+  <h1>🏆 Trading Sport</h1>
+  <div class="subtitle">پلتفرم تمرینی خریدوفروش ارز دیجیتال</div>
 </header>
 
 <main class="container">
 
-  <div class="notice">
-    <strong>حالت آزمایشی</strong><br>
-    قیمت‌ها از API عمومی نوبیتکس دریافت می‌شوند.
-    سفارش‌های این صفحه آزمایشی هستند و به صرافی ارسال نمی‌شوند.
-    موجودی دمو ارزش پولی واقعی ندارد.
+<section class="card">
+  <div class="title">👤 حساب کاربری</div>
+  <div id="userStatus" class="status">در حال بررسی حساب...</div>
+  <div class="row">
+    <button onclick="location.href='auth.html'">ورود / ثبت‌نام</button>
+    <button class="gray" onclick="logout()">خروج از حساب</button>
+  </div>
+  <div class="muted">
+    برای ذخیره موجودی و معاملات در دستگاه‌های مختلف، با همان حساب وارد شو.
+  </div>
+</section>
+
+<section class="card">
+  <div class="title">💰 موجودی حساب دمو</div>
+  <div id="balance" class="balance">در حال دریافت...</div>
+  <div class="muted">واحد موجودی: تومان</div>
+  <div class="row">
+    <div style="flex:1">
+      <div class="muted">ارزش دارایی‌ها</div>
+      <b id="assetsValue">—</b>
+    </div>
+    <div style="flex:1">
+      <div class="muted">سود و زیان ثبت‌شده</div>
+      <b id="realized">—</b>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="title">📈 قیمت لحظه‌ای بازار</div>
+  <div id="marketStatus" class="status">در حال دریافت قیمت‌ها...</div>
+  <div class="row">
+    <div class="coin">
+      <b>₿ بیت‌کوین BTC</b>
+      <div id="btcPrice" class="price">—</div>
+      <div id="btcChange" class="muted">—</div>
+    </div>
+    <div class="coin">
+      <b>Ξ اتریوم ETH</b>
+      <div id="ethPrice" class="price">—</div>
+      <div id="ethChange" class="muted">—</div>
+    </div>
+    <div class="coin">
+      <b>₮ تتر USDT</b>
+      <div id="usdtPrice" class="price">—</div>
+      <div id="usdtChange" class="muted">—</div>
+    </div>
+  </div>
+  <div class="muted">قیمت‌ها از API نوبیتکس دریافت می‌شوند و ممکن است با قیمت صرافی‌های دیگر متفاوت باشند.</div>
+</section>
+
+<section class="card">
+  <div class="title">🛒 خریدوفروش دمو</div>
+
+  <label>انتخاب ارز</label>
+  <select id="symbol">
+    <option value="BTC">بیت‌کوین BTC</option>
+    <option value="ETH">اتریوم ETH</option>
+    <option value="USDT">تتر USDT</option>
+  </select>
+
+  <label>مبلغ معامله به تومان</label>
+  <input id="amount" type="number" min="1" placeholder="مثلاً 500000" inputmode="decimal">
+
+  <div id="tradeInfo" class="muted">ابتدا قیمت بازار را دریافت کن.</div>
+
+  <div class="actions">
+    <button class="green" id="buyBtn" onclick="trade('BUY')">خرید دمو</button>
+    <button class="red" id="sellBtn" onclick="trade('SELL')">فروش دمو</button>
   </div>
 
-  <section class="card">
-    <div class="card-title">موجودی حساب آزمایشی</div>
+  <div id="tradeStatus" class="status"></div>
+  <div class="muted">
+    ⚠️ این بخش شبیه‌ساز است؛ سفارش واقعی به بازار ارسال نمی‌شود و پول واقعی جابه‌جا نمی‌شود.
+  </div>
+</section>
 
-    <div class="balance" id="balance">10,000,000 تومان</div>
-
-    <div class="small">
-      سود و زیان تحقق‌یافته:
-      <span id="realized">0 تومان</span>
+<section class="card">
+  <div class="title">💼 دارایی‌های شما</div>
+  <div class="row">
+    <div class="coin">
+      <b>BTC</b>
+      <div id="holdingBTC">0</div>
     </div>
-
-    <div class="small">
-      ارزش تقریبی دارایی‌ها:
-      <span id="holdingsValue">0 تومان</span>
+    <div class="coin">
+      <b>ETH</b>
+      <div id="holdingETH">0</div>
     </div>
-
-    <button class="secondary full" id="resetDemo">
-      شروع مجدد حساب دمو
-    </button>
-  </section>
-
-  <section class="card">
-    <div class="card-title">قیمت بازار نوبیتکس</div>
-
-    <div class="market-grid">
-
-      <div class="market">
-        <div>
-          <div class="market-name">₿ بیت‌کوین BTC</div>
-          <div class="small">BTC / تومان</div>
-        </div>
-
-        <div class="market-price" id="btcPrice">در حال دریافت...</div>
-
-        <div class="market-change" id="btcChange">---</div>
-      </div>
-
-      <div class="market">
-        <div>
-          <div class="market-name">◆ اتریوم ETH</div>
-          <div class="small">ETH / تومان</div>
-        </div>
-
-        <div class="market-price" id="ethPrice">در حال دریافت...</div>
-
-        <div class="market-change" id="ethChange">---</div>
-      </div>
-
-      <div class="market">
-        <div>
-          <div class="market-name">₮ تتر USDT</div>
-          <div class="small">USDT / تومان</div>
-        </div>
-
-        <div class="market-price" id="usdtPrice">در حال دریافت...</div>
-
-        <div class="market-change" id="usdtChange">---</div>
-      </div>
-
+    <div class="coin">
+      <b>USDT</b>
+      <div id="holdingUSDT">0</div>
     </div>
+  </div>
+</section>
 
-    <div class="status" style="margin-top:15px">
-      وضعیت اتصال:
-      <span id="connection" class="gray">در حال اتصال...</span>
-    </div>
+<section class="card">
+  <div class="title">📜 تاریخچه معاملات</div>
+  <div id="historyStatus" class="status">در انتظار ورود به حساب...</div>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ارز</th>
+          <th>نوع</th>
+          <th>قیمت</th>
+          <th>مقدار</th>
+          <th>زمان</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody">
+        <tr><td colspan="5">هنوز اطلاعاتی دریافت نشده است.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="status">
-      آخرین به‌روزرسانی:
-      <span id="updatedAt">---</span>
-    </div>
-
-    <button class="secondary full" id="refreshPrices">
-      دریافت دوباره قیمت‌ها
-    </button>
-  </section>
-
-  <section class="card">
-    <div class="card-title">ثبت معامله آزمایشی</div>
-
-    <label class="form-label" for="symbol">انتخاب بازار</label>
-
-    <select id="symbol">
-      <option value="btc">بیت‌کوین BTC</option>
-      <option value="eth">اتریوم ETH</option>
-      <option value="usdt">تتر USDT</option>
-    </select>
-
-    <label class="form-label" for="amount">
-      مبلغ معامله به تومان
-    </label>
-
-    <input
-      id="amount"
-      type="number"
-      min="1000"
-      step="1000"
-      value="100000"
-      inputmode="numeric"
-    >
-
-    <div class="small">
-      قیمت معامله بر اساس آخرین قیمت دریافت‌شده محاسبه می‌شود.
-      مبلغ باید از موجودی دمو کمتر یا مساوی باشد.
-    </div>
-
-    <div class="actions">
-      <button class="buy" id="buyBtn">خرید دمو</button>
-      <button class="sell" id="sellBtn">فروش دمو</button>
-    </div>
-
-    <div id="message"></div>
-  </section>
-
-  <section class="card">
-    <div class="card-title">دارایی‌های آزمایشی</div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>دارایی</th>
-            <th>مقدار</th>
-            <th>ارزش تقریبی</th>
-          </tr>
-        </thead>
-
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="card-title">تاریخچه معاملات دمو</div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>زمان</th>
-            <th>بازار</th>
-            <th>عملیات</th>
-            <th>مبلغ</th>
-            <th>قیمت</th>
-          </tr>
-        </thead>
-
-        <tbody id="historyBody"></tbody>
-      </table>
-    </div>
-
-    <div id="emptyHistory" class="empty">
-      هنوز معامله‌ای انجام نداده‌ای.
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="card-title">حساب کاربری</div>
-
-    <div class="status">
-      برای ورود و ثبت‌نام در Trading Sport از لینک زیر استفاده کن.
-    </div>
-
-    <a class="secondary full"
-       style="display:block;text-align:center"
-       href="./auth.html">
-      ورود / ثبت‌نام
-    </a>
-
-    <a class="secondary full"
-       style="display:block;text-align:center"
-       href="./account.html">
-      مشاهده صفحه حساب کاربری
-    </a>
-  </section>
+<section class="card">
+  <div class="title">🔗 لینک‌های برنامه</div>
+  <p><a href="auth.html">ورود و ثبت‌نام</a></p>
+  <p><a href="account.html">صفحه حساب کاربری</a></p>
+  <p><a href="https://github.com/soheilamir827-afk/trading-sport">مخزن گیت‌هاب</a></p>
+</section>
 
 </main>
 
-<footer class="footer">
-  Trading Sport<br>
-  قیمت بازار با داده‌های عمومی نوبیتکس دریافت می‌شود.<br>
-  معاملات این نسخه شبیه‌سازی شده‌اند و سفارش واقعی ارسال نمی‌شود.
-</footer>
+<footer>Trading Sport · نسخه آزمایشی · معاملات شبیه‌سازی‌شده</footer>
 
 <script>
-"use strict";
+const SUPABASE_URL = "https://iickqivnqqveqgatfowb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
 
-const API_URL =
-  "https://apiv2.nobitex.ir/market/stats?srcCurrency=btc,eth,usdt&dstCurrency=rls";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const STORAGE_KEY = "tradingSportDemoV1";
+let currentUser = null;
+let account = null;
+let prices = {BTC:0, ETH:0, USDT:0};
+let changes = {BTC:0, ETH:0, USDT:0};
+let busy = false;
 
-const ASSETS = {
-  btc: { name: "BTC", market: "btc-rls" },
-  eth: { name: "ETH", market: "eth-rls" },
-  usdt: { name: "USDT", market: "usdt-rls" }
-};
+const $ = id => document.getElementById(id);
 
-let prices = {
-  btc: null,
-  eth: null,
-  usdt: null
-};
-
-let changes = {
-  btc: null,
-  eth: null,
-  usdt: null
-};
-
-function newDemo() {
-  return {
-    balance: 10000000,
-    realized: 0,
-    holdings: {
-      btc: 0,
-      eth: 0,
-      usdt: 0
-    },
-    history: []
-  };
-}
-
-function loadDemo() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) return newDemo();
-
-    const parsed = JSON.parse(raw);
-
-    if (
-      typeof parsed.balance !== "number" ||
-      !parsed.holdings ||
-      !Array.isArray(parsed.history)
-    ) {
-      return newDemo();
-    }
-
-    return parsed;
-  } catch {
-    return newDemo();
-  }
-}
-
-let demo = loadDemo();
-
-function saveDemo() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
-}
-
-function toman(value) {
-  return Number(value).toLocaleString("fa-IR", {
+function money(n){
+  return Number(n || 0).toLocaleString("fa-IR", {
     maximumFractionDigits: 2
   }) + " تومان";
 }
 
-function quantity(value) {
-  return Number(value).toLocaleString("en-US", {
-    maximumFractionDigits: 8
+function number(n, digits=8){
+  return Number(n || 0).toLocaleString("en-US", {
+    maximumFractionDigits:digits
   });
 }
 
-function safeNumber(value) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : 0;
+function showStatus(id, msg){
+  $(id).textContent = msg;
 }
 
-function showMessage(text, success) {
-  const el = document.getElementById("message");
-  el.textContent = text;
-  el.className = success ? "green" : "red";
-}
+async function loadUser(){
+  const {data, error} = await sb.auth.getSession();
 
-function renderDemo() {
-  document.getElementById("balance").textContent =
-    toman(demo.balance);
-
-  document.getElementById("realized").textContent =
-    toman(demo.realized);
-
-  let totalValue = 0;
-
-  for (const key of Object.keys(ASSETS)) {
-    if (prices[key] !== null) {
-      totalValue += demo.holdings[key] * prices[key];
-    }
-  }
-
-  document.getElementById("holdingsValue").textContent =
-    toman(totalValue);
-
-  const holdingsBody = document.getElementById("holdingsBody");
-  holdingsBody.replaceChildren();
-
-  for (const key of Object.keys(ASSETS)) {
-    const tr = document.createElement("tr");
-
-    const values = [
-      ASSETS[key].name,
-      quantity(demo.holdings[key]),
-      prices[key] === null
-        ? "---"
-        : toman(demo.holdings[key] * prices[key])
-    ];
-
-    for (const value of values) {
-      const td = document.createElement("td");
-      td.textContent = value;
-      tr.appendChild(td);
-    }
-
-    holdingsBody.appendChild(tr);
-  }
-
-  const historyBody = document.getElementById("historyBody");
-  historyBody.replaceChildren();
-
-  document.getElementById("emptyHistory").style.display =
-    demo.history.length ? "none" : "block";
-
-  for (const trade of demo.history.slice(0, 50)) {
-    const tr = document.createElement("tr");
-
-    const values = [
-      trade.time,
-      trade.symbol.toUpperCase(),
-      trade.side === "BUY" ? "خرید دمو" : "فروش دمو",
-      toman(trade.amount),
-      toman(trade.price)
-    ];
-
-    for (const value of values) {
-      const td = document.createElement("td");
-      td.textContent = value;
-      tr.appendChild(td);
-    }
-
-    historyBody.appendChild(tr);
-  }
-}
-
-function renderPrice(key, priceId, changeId) {
-  const priceEl = document.getElementById(priceId);
-  const changeEl = document.getElementById(changeId);
-
-  if (prices[key] === null) {
-    priceEl.textContent = "---";
-    changeEl.textContent = "قیمت در دسترس نیست";
-    changeEl.className = "market-change gray";
+  if(error){
+    showStatus("userStatus", "خطا در بررسی ورود: " + error.message);
     return;
   }
 
-  priceEl.textContent = toman(prices[key]);
+  currentUser = data.session ? data.session.user : null;
 
-  const change = changes[key];
-
-  if (change !== null) {
-    const sign = change > 0 ? "+" : "";
-
-    changeEl.textContent =
-      sign + change.toLocaleString("fa-IR") + "% تغییر روزانه";
-
-    changeEl.className =
-      "market-change " +
-      (change > 0 ? "green" : change < 0 ? "red" : "gray");
-  } else {
-    changeEl.textContent = "تغییر روزانه موجود نیست";
-    changeEl.className = "market-change gray";
+  if(!currentUser){
+    account = null;
+    showStatus("userStatus", "وارد حساب نشده‌ای؛ برای ذخیره آنلاین وارد شو.");
+    showStatus("historyStatus", "برای دیدن تاریخچه ذخیره‌شده وارد حساب شو.");
+    $("balance").textContent = "—";
+    $("assetsValue").textContent = "—";
+    $("realized").textContent = "—";
+    $("holdingBTC").textContent = "—";
+    $("holdingETH").textContent = "—";
+    $("holdingUSDT").textContent = "—";
+    $("historyBody").innerHTML =
+      '<tr><td colspan="5">برای مشاهده تاریخچه وارد حساب شو.</td></tr>';
+    return;
   }
+
+  showStatus("userStatus", "وارد شده‌ای: " + (currentUser.email || "کاربر"));
+  await loadAccount();
+  await loadHistory();
 }
 
-async function updatePrices() {
-  const connection = document.getElementById("connection");
+async function loadAccount(){
+  if(!currentUser) return;
 
-  connection.textContent = "در حال دریافت قیمت‌ها...";
-  connection.className = "gray";
+  const {data, error} = await sb
+    .from("demo_accounts")
+    .select("balance, holdings, realized, currency")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
 
-  try {
-    const response = await fetch(API_URL, {
-      method: "GET",
-      cache: "no-store"
-    });
+  if(error){
+    showStatus("userStatus", "خطای دریافت حساب: " + error.message);
+    return;
+  }
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
-    }
+  if(!data){
+    showStatus("userStatus", "حساب دمو پیدا نشد. لطفاً ثبت‌نام و تنظیمات پایگاه داده را بررسی کن.");
+    return;
+  }
 
-    const data = await response.json();
+  account = data;
+  renderAccount();
+}
 
-    if (data.status !== "ok" || !data.stats) {
-      throw new Error("پاسخ API معتبر نیست");
-    }
+function renderAccount(){
+  if(!account) return;
 
-    for (const key of Object.keys(ASSETS)) {
-      const item = data.stats[ASSETS[key].market];
+  const h = account.holdings || {};
+  const btc = Number(h.btc || 0);
+  const eth = Number(h.eth || 0);
+  const usdt = Number(h.usdt || 0);
 
-      if (item && Number(item.latest) > 0) {
-        // قیمت API به ریال است؛ تقسیم بر ۱۰ = تومان
-        prices[key] = Number(item.latest) / 10;
+  $("balance").textContent = money(account.balance);
+  $("realized").textContent = money(account.realized);
+  $("holdingBTC").textContent = number(btc) + " BTC";
+  $("holdingETH").textContent = number(eth) + " ETH";
+  $("holdingUSDT").textContent = number(usdt) + " USDT";
 
-        const change = Number(item.dayChange);
+  const value =
+    btc * prices.BTC +
+    eth * prices.ETH +
+    usdt * prices.USDT;
 
-        changes[key] = Number.isFinite(change) ? change : null;
+  $("assetsValue").textContent = money(value);
+  updateTradeInfo();
+}
+
+async function loadPrices(){
+  try{
+    const url =
+      "https://apiv2.nobitex.ir/market/stats?srcCurrency=btc,eth,usdt&dstCurrency=rls";
+
+    const res = await fetch(url, {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP " + res.status);
+
+    const json = await res.json();
+    if(!json.stats) throw new Error("پاسخ قیمت نامعتبر است");
+
+    for(const symbol of ["BTC","ETH","USDT"]){
+      const pair = symbol.toLowerCase() + "-rls";
+      const item = json.stats[pair];
+
+      if(item){
+        const last = Number(item.latest || 0);
+        if(last > 0) prices[symbol] = last / 10;
+
+        changes[symbol] = Number(
+          item.dayChange ?? item.change ?? 0
+        );
       }
     }
 
-    renderPrice("btc", "btcPrice", "btcChange");
-    renderPrice("eth", "ethPrice", "ethChange");
-    renderPrice("usdt", "usdtPrice", "usdtChange");
+    $("btcPrice").textContent = money(prices.BTC);
+    $("ethPrice").textContent = money(prices.ETH);
+    $("usdtPrice").textContent = money(prices.USDT);
 
-    connection.textContent = "دریافت موفق از نوبیتکس";
-    connection.className = "green";
+    $("btcChange").textContent = "تغییر روزانه: " + number(changes.BTC,2) + "%";
+    $("ethChange").textContent = "تغییر روزانه: " + number(changes.ETH,2) + "%";
+    $("usdtChange").textContent = "تغییر روزانه: " + number(changes.USDT,2) + "%";
 
-    document.getElementById("updatedAt").textContent =
-      new Date().toLocaleTimeString("fa-IR");
+    showStatus("marketStatus", "آخرین به‌روزرسانی: " + new Date().toLocaleTimeString("fa-IR"));
 
-    renderDemo();
+    updateTradeInfo();
+    if(account) renderAccount();
 
-  } catch (error) {
-    console.error(error);
-
-    connection.textContent =
-      "دریافت قیمت ناموفق بود؛ اتصال یا API را بررسی کن.";
-
-    connection.className = "red";
+  }catch(e){
+    showStatus("marketStatus", "دریافت قیمت ناموفق بود؛ اتصال اینترنت را بررسی کن.");
   }
 }
 
-function trade(side) {
-  const key = document.getElementById("symbol").value;
-  const amount = Number(document.getElementById("amount").value);
-  const price = prices[key];
+function updateTradeInfo(){
+  const symbol = $("symbol").value;
+  const amount = Number($("amount").value || 0);
+  const price = prices[symbol];
 
-  if (price === null || !Number.isFinite(price) || price <= 0) {
-    showMessage("ابتدا باید قیمت معتبر بازار دریافت شود.", false);
+  if(!price){
+    $("tradeInfo").textContent = "قیمت این ارز هنوز دریافت نشده است.";
     return;
   }
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    showMessage("مبلغ معامله را درست وارد کن.", false);
-    return;
-  }
+  const qty = amount > 0 ? amount / price : 0;
+  const h = account?.holdings || {};
 
-  if (side === "BUY") {
-    if (amount > demo.balance) {
-      showMessage("موجودی دمو برای این خرید کافی نیست.", false);
-      return;
-    }
-
-    const qty = amount / price;
-
-    demo.balance -= amount;
-    demo.holdings[key] += qty;
-
-  } else {
-    const qty = amount / price;
-
-    if (qty > demo.holdings[key]) {
-      showMessage(
-        "دارایی کافی برای فروش نداری. ابتدا مقدار کمتری انتخاب کن.",
-        false
-      );
-      return;
-    }
-
-    demo.holdings[key] -= qty;
-    demo.balance += amount;
-    demo.realized += 0;
-  }
-
-  demo.history.unshift({
-    time: new Date().toLocaleString("fa-IR"),
-    symbol: key,
-    side: side,
-    amount: amount,
-    price: price
-  });
-
-  demo.history = demo.history.slice(0, 100);
-
-  saveDemo();
-  renderDemo();
-
-  showMessage(
-    side === "BUY"
-      ? "خرید آزمایشی ثبت شد؛ هیچ سفارش واقعی ارسال نشده است."
-      : "فروش آزمایشی ثبت شد؛ هیچ سفارش واقعی ارسال نشده است.",
-    true
-  );
+  $("tradeInfo").textContent =
+    "قیمت: " + money(price) +
+    " | مقدار تقریبی: " + number(qty) +
+    " | موجودی ارز: " + number(h[symbol.toLowerCase()] || 0);
 }
 
-document.getElementById("buyBtn").addEventListener("click", () => {
-  trade("BUY");
+$("symbol").addEventListener("change", updateTradeInfo);
+$("amount").addEventListener("input", updateTradeInfo);
+
+async function trade(side){
+  if(busy) return;
+
+  if(!currentUser){
+    showStatus("tradeStatus", "ابتدا وارد حساب کاربری شو.");
+    return;
+  }
+
+  if(!account){
+    showStatus("tradeStatus", "حساب دمو بارگذاری نشده است.");
+    return;
+  }
+
+  const symbol = $("symbol").value;
+  const amount = Number($("amount").value);
+  const price = Number(prices[symbol]);
+
+  if(!price || price <= 0){
+    showStatus("tradeStatus", "قیمت معتبر در دسترس نیست.");
+    return;
+  }
+
+  if(!Number.isFinite(amount) || amount <= 0){
+    showStatus("tradeStatus", "مبلغ معامله را درست وارد کن.");
+    return;
+  }
+
+  if(amount > 1000000000000){
+    showStatus("tradeStatus", "مبلغ واردشده بیش از حد مجاز است.");
+    return;
+  }
+
+  if(side === "BUY" && amount > Number(account.balance)){
+    showStatus("tradeStatus", "موجودی تومان کافی نیست.");
+    return;
+  }
+
+  const holdings = account.holdings || {};
+  const quantity = amount / price;
+  const available = Number(holdings[symbol.toLowerCase()] || 0);
+
+  if(side === "SELL" && quantity > available){
+    showStatus("tradeStatus", "موجودی این ارز برای فروش کافی نیست.");
+    return;
+  }
+
+  busy = true;
+  $("buyBtn").disabled = true;
+  $("sellBtn").disabled = true;
+  showStatus("tradeStatus", "در حال ثبت معامله در سرور...");
+
+  try{
+    const {data, error} = await sb.rpc("execute_demo_trade", {
+      p_symbol: symbol,
+      p_side: side,
+      p_price: price,
+      p_quantity: quantity
+    });
+
+    if(error) throw error;
+
+    showStatus("tradeStatus", "معامله دمو با موفقیت ثبت شد.");
+
+    await loadAccount();
+    await loadHistory();
+
+    $("amount").value = "";
+    updateTradeInfo();
+
+  }catch(e){
+    showStatus("tradeStatus", "ثبت معامله ناموفق بود: " + e.message);
+  }finally{
+    busy = false;
+    $("buyBtn").disabled = false;
+    $("sellBtn").disabled = false;
+  }
+}
+
+async function loadHistory(){
+  if(!currentUser) return;
+
+  const {data, error} = await sb
+    .from("demo_trades")
+    .select("symbol, side, entry_price, quantity, opened_at")
+    .eq("user_id", currentUser.id)
+    .order("opened_at", {ascending:false})
+    .limit(100);
+
+  if(error){
+    showStatus("historyStatus", "خطای دریافت تاریخچه: " + error.message);
+    return;
+  }
+
+  if(!data || data.length === 0){
+    $("historyBody").innerHTML =
+      '<tr><td colspan="5">هنوز معامله‌ای ثبت نشده است.</td></tr>';
+    showStatus("historyStatus", "تاریخچه آنلاین آماده است.");
+    return;
+  }
+
+  $("historyBody").innerHTML = data.map(t => {
+    const side = t.side === "BUY" ? "خرید" :
+                 t.side === "SELL" ? "فروش" : t.side;
+
+    const date = t.opened_at
+      ? new Date(t.opened_at).toLocaleString("fa-IR")
+      : "—";
+
+    return `<tr>
+      <td>${escapeHTML(t.symbol || "")}</td>
+      <td>${escapeHTML(side || "")}</td>
+      <td>${money(t.entry_price)}</td>
+      <td>${number(t.quantity)}</td>
+      <td>${escapeHTML(date)}</td>
+    </tr>`;
+  }).join("");
+
+  showStatus("historyStatus", "تعداد معاملات ثبت‌شده: " + data.length);
+}
+
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+async function logout(){
+  const {error} = await sb.auth.signOut();
+
+  if(error){
+    alert("خطا در خروج: " + error.message);
+    return;
+  }
+
+  currentUser = null;
+  account = null;
+  await loadUser();
+}
+
+sb.auth.onAuthStateChange((_event, session) => {
+  currentUser = session ? session.user : null;
+  setTimeout(() => loadUser(), 0);
 });
 
-document.getElementById("sellBtn").addEventListener("click", () => {
-  trade("SELL");
-});
-
-document.getElementById("refreshPrices").addEventListener("click", () => {
-  updatePrices();
-});
-
-document.getElementById("resetDemo").addEventListener("click", () => {
-  const ok = confirm(
-    "حساب دمو و تاریخچه معاملات آزمایشی از این مرورگر پاک شود؟"
-  );
-
-  if (!ok) return;
-
-  demo = newDemo();
-  saveDemo();
-  renderDemo();
-
-  showMessage("حساب دمو از نو شروع شد.", true);
-});
-
-renderDemo();
-updatePrices();
-
-// به‌روزرسانی خودکار هر ۶۰ ثانیه
-setInterval(updatePrices, 60000);
+(async function init(){
+  await loadPrices();
+  await loadUser();
+  setInterval(loadPrices, 60000);
+})();
 </script>
-
 </body>
-</html>
+      </html>
