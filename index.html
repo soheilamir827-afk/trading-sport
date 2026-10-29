@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1120">
+<meta name="description" content="Trading Sport - پلتفرم تمرینی معاملات ارز دیجیتال">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <title>Trading Sport</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -20,9 +24,10 @@ h2{font-size:17px;margin:0 0 14px}
 label{display:block;font-size:13px;color:#cbd5e1;margin:12px 0 6px}
 input,select,button{width:100%;padding:12px;border-radius:9px;border:1px solid #334155;background:#0b1120;color:white;font-size:14px}
 button{border:0;cursor:pointer;font-weight:bold;background:#334155;margin-top:10px}
-button:disabled{opacity:.5}
+button:disabled{opacity:.5;cursor:not-allowed}
 .green{background:#059669}
 .red{background:#dc2626}
+.install{background:#f87171;color:#111827;font-weight:bold}
 .muted{color:#94a3b8;font-size:12px;line-height:1.8}
 .big{font-size:23px;font-weight:bold;color:#4ade80;direction:ltr;text-align:right;overflow-wrap:anywhere}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -31,9 +36,22 @@ th,td{padding:10px 7px;border-bottom:1px solid #29374e;text-align:center;white-s
 th{color:#94a3b8}
 .tablewrap{overflow-x:auto}
 .status{font-size:13px;color:#fbbf24;line-height:1.8;overflow-wrap:anywhere}
-.badge{display:inline-block;padding:4px 8px;border-radius:7px;background:#26364f}
 hr{border:0;border-top:1px solid #29374e;margin:14px 0}
-@media(max-width:480px){.row{grid-template-columns:1fr}header h1{font-size:23px}}
+#installApp{
+position:fixed;
+bottom:18px;
+right:14px;
+z-index:9999;
+width:auto;
+max-width:calc(100% - 28px);
+border-radius:30px;
+padding:13px 18px;
+box-shadow:0 4px 18px #0008;
+}
+@media(max-width:480px){
+.row{grid-template-columns:1fr}
+header h1{font-size:23px}
+}
 </style>
 </head>
 
@@ -45,6 +63,15 @@ hr{border:0;border-top:1px solid #29374e;margin:14px 0}
 </header>
 
 <main>
+
+<section class="card">
+<h2>📲 اپلیکیشن</h2>
+<p class="muted">
+می‌توانی در صورت پشتیبانی مرورگر، برنامه را روی صفحه اصلی گوشی نصب کنی.
+</p>
+<button id="installApp" class="install">📲 نصب اپلیکیشن</button>
+<div id="installStatus" class="muted"></div>
+</section>
 
 <section class="card">
 <h2>👤 حساب کاربری</h2>
@@ -80,13 +107,19 @@ hr{border:0;border-top:1px solid #29374e;margin:14px 0}
 <h2>📊 قیمت ارزها</h2>
 <div class="tablewrap">
 <table>
-<thead><tr><th>ارز</th><th>قیمت تومان</th><th>وضعیت</th></tr></thead>
-<tbody id="prices">
-<tr><td>Bitcoin (BTC)</td><td id="btcTablePrice">—</td><td id="btcTableStatus">در انتظار</td></tr>
+<thead>
+<tr><th>ارز</th><th>قیمت تومان</th><th>وضعیت</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Bitcoin (BTC)</td>
+<td id="btcTablePrice">—</td>
+<td id="btcTableStatus">در انتظار</td>
+</tr>
 </tbody>
 </table>
 </div>
-<p class="muted">در حال حاضر فقط قیمت بیت‌کوین از API دریافت می‌شود.</p>
+<p class="muted">قیمت بیت‌کوین از سرور Trading Sport دریافت می‌شود.</p>
 </section>
 
 <section class="card">
@@ -127,7 +160,7 @@ hr{border:0;border-top:1px solid #29374e;margin:14px 0}
 
 <p class="muted">
 مارجین از موجودی آزاد کسر می‌شود. اهرم سود و زیان را افزایش می‌دهد.
-زیان هر معامله در شبیه‌ساز به مارجین رزروشده محدود می‌شود.
+زیان هر معامله در شبیه‌ساز به مارجین رزروشده محدود شده است.
 </p>
 </section>
 
@@ -136,9 +169,14 @@ hr{border:0;border-top:1px solid #29374e;margin:14px 0}
 <div class="tablewrap">
 <table>
 <thead>
-<tr><th>ارز</th><th>جهت</th><th>ورود</th><th>قیمت فعلی</th><th>سود/زیان</th><th>عملیات</th></tr>
+<tr>
+<th>ارز</th><th>جهت</th><th>ورود</th>
+<th>قیمت فعلی</th><th>سود/زیان</th><th>عملیات</th>
+</tr>
 </thead>
-<tbody id="openTrades"><tr><td colspan="6">در حال بارگذاری...</td></tr></tbody>
+<tbody id="openTrades">
+<tr><td colspan="6">در حال بارگذاری...</td></tr>
+</tbody>
 </table>
 </div>
 </section>
@@ -148,9 +186,14 @@ hr{border:0;border-top:1px solid #29374e;margin:14px 0}
 <div class="tablewrap">
 <table>
 <thead>
-<tr><th>ارز</th><th>جهت</th><th>ورود</th><th>خروج</th><th>سود/زیان</th><th>وضعیت</th></tr>
+<tr>
+<th>ارز</th><th>جهت</th><th>ورود</th>
+<th>خروج</th><th>سود/زیان</th><th>وضعیت</th>
+</tr>
 </thead>
-<tbody id="history"><tr><td colspan="6">در حال بارگذاری...</td></tr></tbody>
+<tbody id="history">
+<tr><td colspan="6">در حال بارگذاری...</td></tr>
+</tbody>
 </table>
 </div>
 </section>
@@ -171,8 +214,9 @@ loading="lazy">
 <h2>⚠️ نکات مهم</h2>
 <p class="muted">
 این برنامه فقط برای تمرین است و به بازار واقعی سفارش ارسال نمی‌کند.
-قیمت‌ها تقریبی هستند. حد سود و ضرر این نسخه فقط هنگام بازبودن سایت و
-اجرای بررسی قیمت‌ها کنترل می‌شوند؛ بستن مرورگر اجرای خودکار آن‌ها را تضمین نمی‌کند.
+قیمت‌ها تقریبی هستند. بررسی حد سود و حد ضرر فقط وقتی صفحه باز است
+و کد بررسی قیمت‌ها در حال اجراست انجام می‌شود.
+بستن مرورگر، اجرای خودکار حد سود و ضرر را تضمین نمی‌کند.
 </p>
 </section>
 
@@ -185,16 +229,23 @@ const SUPABASE_URL = "https://iickqivnqqveqgatfowb.supabase.co";
 const SUPABASE_KEY = "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
 const PRICE_API = "https://trading-sport-api.onrender.com/api/prices";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const $ = id => document.getElementById(id);
 
 let user = null;
 let account = null;
 let btcPrice = 0;
 let busy = false;
+let installPrompt = null;
+let refreshing = false;
 
 function money(n) {
   if (!Number.isFinite(Number(n))) return "—";
+
   return Number(n).toLocaleString("fa-IR", {
     maximumFractionDigits: 2
   });
@@ -211,7 +262,9 @@ function safe(value) {
 }
 
 function message(text, ok = false) {
-  $("tradeMessage").style.color = ok ? "#4ade80" : "#fbbf24";
+  $("tradeMessage").style.color =
+    ok ? "#4ade80" : "#fbbf24";
+
   $("tradeMessage").textContent = text;
 }
 
@@ -219,18 +272,24 @@ async function getUser() {
   const { data, error } = await db.auth.getUser();
 
   if (error) throw error;
+
   user = data.user;
 
   if (!user) {
     $("userInfo").innerHTML =
       'وارد حساب نشده‌ای. <a style="color:#60a5fa" href="./auth.html">ورود یا ثبت‌نام</a>';
+
     $("logout").style.display = "none";
     $("openTrade").disabled = true;
+
     return false;
   }
 
-  $("userInfo").textContent = "وارد شده‌ای: " + user.email;
+  $("userInfo").textContent =
+    "وارد شده‌ای: " + user.email;
+
   $("logout").style.display = "block";
+
   return true;
 }
 
@@ -242,9 +301,13 @@ async function loadAccount() {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error("حساب دمو پیدا نشد.");
+
+  if (!data) {
+    throw new Error("حساب دمو پیدا نشد.");
+  }
 
   account = data;
+
   $("balance").textContent = money(data.balance);
   $("realized").textContent = money(data.realized || 0);
 }
@@ -254,10 +317,17 @@ async function loadPrices() {
   $("btcTableStatus").textContent = "در حال دریافت";
 
   try {
-    const response = await fetch(PRICE_API, { cache: "no-store" });
+    const response = await fetch(PRICE_API, {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("خطای سرور قیمت: HTTP " + response.status);
+    }
+
     const data = await response.json();
 
-    if (!response.ok || data.success !== true) {
+    if (data.success !== true) {
       throw new Error(data.error || "دریافت قیمت ناموفق بود");
     }
 
@@ -269,22 +339,57 @@ async function loadPrices() {
 
     btcPrice = price;
 
-    $("priceStatus").textContent =
-      "متصل — آخرین به‌روزرسانی: " +
-      new Date(data.updatedAt).toLocaleTimeString("fa-IR");
+    let updatedText = "";
 
-    $("btcPrice").textContent = money(btcPrice) + " تومان";
+    if (data.updatedAt) {
+      const date = new Date(data.updatedAt);
+
+      if (!Number.isNaN(date.getTime())) {
+        updatedText = " — " +
+          date.toLocaleTimeString("fa-IR");
+      }
+    }
+
+    $("priceStatus").textContent =
+      "متصل" + updatedText;
+
+    $("priceStatus").style.color = "#4ade80";
+
+    $("btcPrice").textContent =
+      money(btcPrice) + " تومان";
+
     $("btcTablePrice").textContent = money(btcPrice);
     $("btcTableStatus").textContent = "متصل";
 
     return true;
+
   } catch (error) {
     $("priceStatus").textContent =
       "خطا در دریافت قیمت: " + error.message;
+
+    $("priceStatus").style.color = "#f87171";
     $("btcTableStatus").textContent = "خطا";
     $("btcTablePrice").textContent = "—";
+    $("btcPrice").textContent = "قیمت موجود نیست";
+
+    btcPrice = 0;
+
     return false;
   }
+}
+
+function calculatePnl(trade, price) {
+  if (!price) return 0;
+
+  const entry = Number(trade.entry_price);
+  const qty = Number(trade.quantity);
+  const margin = Number(trade.margin || 0);
+  const direction = trade.side === "LONG" ? 1 : -1;
+
+  return Math.max(
+    -margin,
+    (price - entry) * qty * direction
+  );
 }
 
 async function loadTrades() {
@@ -298,57 +403,67 @@ async function loadTrades() {
   if (error) throw error;
 
   const trades = data || [];
+
   const open = trades.filter(t => t.status === "OPEN");
   const closed = trades.filter(t => t.status !== "OPEN");
 
-  $("openTrades").innerHTML = open.length ? open.map(t => {
-    const pnl = calculatePnl(t, btcPrice);
-    return `<tr>
-      <td>${safe(t.symbol)}</td>
-      <td>${safe(t.side)}</td>
-      <td>${money(t.entry_price)}</td>
-      <td>${btcPrice ? money(btcPrice) : "—"}</td>
-      <td style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${btcPrice ? money(pnl) : "—"}</td>
-      <td><button data-close="${safe(t.id)}" class="red">بستن</button></td>
-    </tr>`;
-  }).join("") : '<tr><td colspan="6">معامله بازی وجود ندارد.</td></tr>';
+  $("openTrades").innerHTML = open.length
+    ? open.map(t => {
+        const pnl = calculatePnl(t, btcPrice);
 
-  $("history").innerHTML = closed.length ? closed.map(t => `
-    <tr>
-      <td>${safe(t.symbol)}</td>
-      <td>${safe(t.side)}</td>
-      <td>${money(t.entry_price)}</td>
-      <td>${money(t.exit_price)}</td>
-      <td style="color:${Number(t.profit_loss) >= 0 ? "#4ade80" : "#f87171"}">${money(t.profit_loss)}</td>
-      <td>${safe(t.status)}</td>
-    </tr>
-  `).join("") : '<tr><td colspan="6">تاریخچه‌ای وجود ندارد.</td></tr>';
-}
+        return `<tr>
+          <td>${safe(t.symbol)}</td>
+          <td>${safe(t.side)}</td>
+          <td>${money(t.entry_price)}</td>
+          <td>${btcPrice ? money(btcPrice) : "—"}</td>
+          <td style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">
+            ${btcPrice ? money(pnl) : "—"}
+          </td>
+          <td>
+            <button data-close="${safe(t.id)}" class="red">
+              بستن
+            </button>
+          </td>
+        </tr>`;
+      }).join("")
+    : '<tr><td colspan="6">معامله بازی وجود ندارد.</td></tr>';
 
-function calculatePnl(trade, price) {
-  if (!price) return 0;
-
-  const entry = Number(trade.entry_price);
-  const qty = Number(trade.quantity);
-  const direction = trade.side === "LONG" ? 1 : -1;
-
-  return Math.max(
-    -Number(trade.margin || 0),
-    (price - entry) * qty * direction
-  );
+  $("history").innerHTML = closed.length
+    ? closed.map(t => `
+        <tr>
+          <td>${safe(t.symbol)}</td>
+          <td>${safe(t.side)}</td>
+          <td>${money(t.entry_price)}</td>
+          <td>${money(t.exit_price)}</td>
+          <td style="color:${Number(t.profit_loss) >= 0 ? "#4ade80" : "#f87171"}">
+            ${money(t.profit_loss)}
+          </td>
+          <td>${safe(t.status)}</td>
+        </tr>
+      `).join("")
+    : '<tr><td colspan="6">تاریخچه‌ای وجود ندارد.</td></tr>';
 }
 
 async function refreshAll() {
-  if (!user) return;
+  if (!user || refreshing) return;
+
+  refreshing = true;
 
   try {
     const priceOK = await loadPrices();
+
     await loadAccount();
     await loadTrades();
 
-    if (priceOK) await checkStops();
+    if (priceOK) {
+      await checkStops();
+    }
+
   } catch (error) {
     message("خطا در دریافت اطلاعات: " + error.message);
+
+  } finally {
+    refreshing = false;
   }
 }
 
@@ -399,13 +514,20 @@ async function openTrade() {
   const margin = Number($("margin").value);
   const leverage = Number($("leverage").value);
   const side = $("side").value;
+
   const slRaw = $("sl").value.trim();
   const tpRaw = $("tp").value.trim();
+
   const sl = slRaw === "" ? null : Number(slRaw);
   const tp = tpRaw === "" ? null : Number(tpRaw);
 
   if (!Number.isFinite(margin) || margin <= 0) {
     message("مارجین باید عددی بزرگ‌تر از صفر باشد.");
+    return;
+  }
+
+  if (!Number.isFinite(leverage) || leverage < 1 || leverage > 20) {
+    message("اهرم معتبر نیست.");
     return;
   }
 
@@ -442,6 +564,7 @@ async function openTrade() {
 
   busy = true;
   $("openTrade").disabled = true;
+
   message("در حال بازکردن معامله...");
 
   try {
@@ -458,11 +581,15 @@ async function openTrade() {
     if (error) throw error;
 
     message("معامله دمو با موفقیت باز شد.", true);
+
     $("sl").value = "";
     $("tp").value = "";
+
     await refreshAll();
+
   } catch (error) {
     message("معامله باز نشد: " + error.message);
+
   } finally {
     busy = false;
     $("openTrade").disabled = false;
@@ -477,7 +604,9 @@ async function closeTrade(id, automatic = false) {
     return;
   }
 
-  if (!automatic && !confirm("معامله دمو بسته شود؟")) return;
+  if (!automatic && !confirm("معامله دمو بسته شود؟")) {
+    return;
+  }
 
   busy = true;
 
@@ -489,14 +618,19 @@ async function closeTrade(id, automatic = false) {
 
     if (error) throw error;
 
-    message(automatic
-      ? "معامله به دلیل رسیدن به حد سود یا ضرر بسته شد."
-      : "معامله بسته شد.", true);
+    message(
+      automatic
+        ? "معامله به دلیل رسیدن به حد سود یا ضرر بسته شد."
+        : "معامله بسته شد.",
+      true
+    );
 
     await loadAccount();
     await loadTrades();
+
   } catch (error) {
     message("بستن معامله ناموفق بود: " + error.message);
+
   } finally {
     busy = false;
   }
@@ -518,8 +652,75 @@ $("openTrade").addEventListener("click", openTrade);
 
 $("openTrades").addEventListener("click", async event => {
   const button = event.target.closest("[data-close]");
-  if (button) await closeTrade(button.dataset.close);
+
+  if (button) {
+    await closeTrade(button.dataset.close);
+  }
 });
+
+/* نصب اپلیکیشن */
+
+const installButton = $("installApp");
+const installStatus = $("installStatus");
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+
+  installPrompt = event;
+
+  installStatus.textContent =
+    "برنامه آماده نصب است. روی دکمه بالا بزن.";
+
+  installButton.textContent = "📲 نصب Trading Sport";
+});
+
+installButton.addEventListener("click", async () => {
+  if (window.matchMedia("(display-mode: standalone)").matches) {
+    installStatus.textContent =
+      "برنامه از قبل نصب شده است.";
+
+    return;
+  }
+
+  if (installPrompt) {
+    installPrompt.prompt();
+
+    const result = await installPrompt.userChoice;
+
+    installStatus.textContent =
+      result.outcome === "accepted"
+        ? "درخواست نصب پذیرفته شد."
+        : "نصب لغو شد.";
+
+    installPrompt = null;
+
+    return;
+  }
+
+  installStatus.textContent =
+    "در Chrome، منوی سه‌نقطه را باز کن و اگر موجود بود، Install app یا Add to Home screen را انتخاب کن.";
+});
+
+window.addEventListener("appinstalled", () => {
+  installStatus.textContent =
+    "Trading Sport با موفقیت نصب شد.";
+
+  installButton.textContent = "✅ اپلیکیشن نصب شد";
+});
+
+/* اتصال سرویس‌ورکر */
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => {
+        console.log("Trading Sport service worker ready");
+      })
+      .catch(error => {
+        console.error("Service Worker error:", error);
+      });
+  });
+}
 
 async function start() {
   try {
@@ -529,22 +730,17 @@ async function start() {
 
     await refreshAll();
 
-    // این بررسی فقط وقتی صفحه باز است اجرا می‌شود.
+    // بررسی قیمت و حد سود/ضرر فقط هنگام بازبودن صفحه
     setInterval(refreshAll, 15000);
-  } catch (error) {<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("Trading Sport ready"))
-      .catch(error => console.error("Service Worker error:", error));
-  });
-}
-</script>
-    $("userInfo").textContent = "خطا: " + error.message;
+
+  } catch (error) {
+    $("userInfo").textContent =
+      "خطا در اتصال: " + error.message;
   }
 }
 
 start();
 </script>
+
 </body>
-  </html>
+</html>
