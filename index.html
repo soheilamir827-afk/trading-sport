@@ -531,7 +531,15 @@ async function start() {
 
     // این بررسی فقط وقتی صفحه باز است اجرا می‌شود.
     setInterval(refreshAll, 15000);
-  } catch (error) {
+  } catch (error) {<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("Trading Sport ready"))
+      .catch(error => console.error("Service Worker error:", error));
+  });
+}
+</script>
     $("userInfo").textContent = "خطا: " + error.message;
   }
 }
