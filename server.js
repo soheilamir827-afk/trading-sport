@@ -12,72 +12,63 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/prices", async (req, res) => {
+  const results = {};
+
   try {
-    const symbols = [
-      "BTCUSDT",
-      "ETHUSDT",
-      "BNBUSDT",
-      "SOLUSDT",
-      "XRPUSDT",
-      "DOGEUSDT",
-      "TRXUSDT",
-      "ADAUSDT",
-      "TONUSDT"
-    ];
+    const response = await fetch(
+      "https://api.binance.com/api/v3/ticker/price"
+    );
 
-    const [nobitexResponse, binanceResponse] =
-      await Promise.all([
-        fetch(
-          "https://apiv2.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls"
-        ),
-        fetch(
-          "https://api.binance.com/api/v3/ticker/price"
-        )
-      ]);
+    results.binance = {
+      status: response.status,
+      ok: response.ok
+    };
 
-    if (!nobitexResponse.ok || !binanceResponse.ok) {
-      throw new Error("Price provider unavailable");
-    }
+    if (response.ok) {
+      const data = await response.json();
 
-    const nobitex = await nobitexResponse.json();
-    const binance = await binanceResponse.json();
+      for (const symbol of [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "SOLUSDT",
+        "XRPUSDT",
+        "DOGEUSDT",
+        "TRXUSDT",
+        "ADAUSDT",
+        "TONUSDT"
+      ]) {
+        const item = data.find(x => x.symbol === symbol);
 
-    const usdtRial =
-      Number(nobitex.stats?.["usdt-rls"]?.latest);
-
-    if (!Number.isFinite(usdtRial) || usdtRial <= 0) {
-      throw new Error("USDT price unavailable");
-    }
-
-    const usdtToman = usdtRial / 10;
-
-    const prices = {};
-
-    for (const symbol of symbols) {
-      const item = binance.find(
-        x => x.symbol === symbol
-      );
-
-      if (item) {
-        prices[symbol.replace("USDT", "")] =
-          Number(item.price) * usdtToman;
+        if (item) {
+          results[symbol.replace("USDT", "")] =
+            Number(item.price);
+        }
       }
     }
-
-    prices.USDT = usdtToman;
-
-    res.json({
-      success: true,
-      currency: "TOMAN",
-      updatedAt: new Date().toISOString(),
-      prices
-    });
   } catch (error) {
-    res.status(502).json({
-      success: false,
-      error: error.message
-    });
+    results.binanceError = error.message;
   }
+
+  try {
+    const response = await fetch(
+      "https://apiv2.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls"
+    );
+
+    results.nobitex = {
+      status: response.status,
+      ok: response.ok
+    };
+
+    if (response.ok) {
+      const data = await response.json();
+      results.nobitexData = data.stats?.["usdt-rls"] || null;
+    }
+  } catch (error) {
+    results.nobitexError = error.message;
+  }
+
+  res.json(results);
 });
 
 const PORT = process.env.PORT || 3000;
