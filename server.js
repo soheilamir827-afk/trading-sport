@@ -12,63 +12,68 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/prices", async (req, res) => {
-  const results = {};
-
   try {
     const response = await fetch(
-      "https://api.binance.com/api/v3/ticker/price"
+      "https://api.coinbase.com/v2/prices/BTC-USD/spot"
     );
 
-    results.binance = {
-      status: response.status,
-      ok: response.ok
-    };
-
-    if (response.ok) {
-      const data = await response.json();
-
-      for (const symbol of [
-        "BTCUSDT",
-        "ETHUSDT",
-        "BNBUSDT",
-        "SOLUSDT",
-        "XRPUSDT",
-        "DOGEUSDT",
-        "TRXUSDT",
-        "ADAUSDT",
-        "TONUSDT"
-      ]) {
-        const item = data.find(x => x.symbol === symbol);
-
-        if (item) {
-          results[symbol.replace("USDT", "")] =
-            Number(item.price);
-        }
-      }
+    if (!response.ok) {
+      return res.status(502).json({
+        success: false,
+        error: "Bitcoin price source unavailable",
+        status: response.status
+      });
     }
-  } catch (error) {
-    results.binanceError = error.message;
-  }
 
-  try {
-    const response = await fetch(
+    const data = await response.json();
+    const btcUsd = Number(data.data.amount);
+
+    if (!Number.isFinite(btcUsd) || btcUsd <= 0) {
+      throw new Error("Invalid Bitcoin price");
+    }
+
+    const usdtResponse = await fetch(
       "https://apiv2.nobitex.ir/market/stats?srcCurrency=usdt&dstCurrency=rls"
     );
 
-    results.nobitex = {
-      status: response.status,
-      ok: response.ok
-    };
-
-    if (response.ok) {
-      const data = await response.json();
-      results.nobitexData = data.stats?.["usdt-rls"] || null;
+    if (!usdtResponse.ok) {
+      return res.status(502).json({
+        success: false,
+        error: "Nobitex price source unavailable",
+        status: usdtResponse.status
+      });
     }
-  } catch (error) {
-    results.nobitexError = error.message;
-  }
 
-  res.json(results);
+    const usdtData = await usdtResponse.json();
+    const usdtRial = Number(
+      usdtData.stats?.["usdt-rls"]?.latest
+    );
+
+    if (!Number.isFinite(usdtRial) || usdtRial <= 0) {
+      throw new Error("Invalid USDT price");
+    }
+
+    const usdtToman = usdtRial / 10;
+    const btcToman = btcUsd * usdtToman;
+
+    res.json({
+      success: true,
+      currency: "TOMAN",
+      updatedAt: new Date().toISOString(),
+      prices: {
+        BTC: btcToman
+      },
+      details: {
+        BTC_USD: btcUsd,
+        USDT_TOMAN: usdtToman
+      }
+    });
+  } catch (error) {
+    res.status(502).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
