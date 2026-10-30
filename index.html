@@ -9,738 +9,253 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Trading Sport</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
+:root{--bg:#080e1b;--panel:#111c30;--panel2:#17243a;--line:#263650;--text:#f1f5f9;--muted:#91a2ba;--red:#f87171;--green:#34d399;--blue:#60a5fa}
 *{box-sizing:border-box}
-body{margin:0;background:#0b1120;color:#f1f5f9;font-family:Arial,Tahoma,sans-serif}
-header{background:#111b2e;padding:20px;text-align:center;border-bottom:1px solid #29374e}
-header h1{color:#f87171;margin:0;font-size:26px}
-header p{font-size:12px;color:#94a3b8}
-main{max-width:950px;margin:auto;padding:12px}
-.card{background:#131e31;border:1px solid #29374e;border-radius:14px;padding:16px;margin-bottom:14px;overflow:hidden}
-h2{font-size:17px;margin:0 0 14px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;padding-bottom:88px}
+header{background:linear-gradient(135deg,#17243a,#10192b);padding:18px 16px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.headrow{max-width:950px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;background:#f87171;color:#111827;display:grid;place-items:center;font-size:23px}
+header h1{font-size:20px;color:#fff;margin:0}header p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.demo-badge{font-size:11px;color:#fbbf24;background:#3b2c13;border:1px solid #72531c;padding:7px 10px;border-radius:20px;white-space:nowrap}
+main{max-width:950px;margin:auto;padding:14px}
+.page{display:none;animation:fade .18s ease}.page.active{display:block}
+@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px;overflow:hidden}
+.card h2{font-size:16px;margin:0 0 14px}
+.muted{color:var(--muted);font-size:12px;line-height:1.9}
+.status{font-size:12px;color:#fbbf24;line-height:1.8;overflow-wrap:anywhere}
+.big{font-size:23px;font-weight:bold;color:var(--green);direction:ltr;text-align:right;overflow-wrap:anywhere}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:9px}.stat strong{font-size:18px;direction:ltr;display:block;text-align:right;overflow-wrap:anywhere}
 label{display:block;font-size:13px;color:#cbd5e1;margin:12px 0 6px}
-input,select,button{width:100%;padding:12px;border-radius:9px;border:1px solid #334155;background:#0b1120;color:white;font-size:14px}
+input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0b1120;color:white;font-size:14px}
 button{border:0;cursor:pointer;font-weight:bold;background:#334155;margin-top:10px}
 button:disabled{opacity:.5;cursor:not-allowed}
-.green{background:#059669}
-.red{background:#dc2626}
-.install{background:#f87171;color:#111827;font-weight:bold}
-.muted{color:#94a3b8;font-size:12px;line-height:1.8}
-.big{font-size:23px;font-weight:bold;color:#4ade80;direction:ltr;text-align:right;overflow-wrap:anywhere}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
-th,td{padding:10px 7px;border-bottom:1px solid #29374e;text-align:center;white-space:nowrap}
-th{color:#94a3b8}
-.tablewrap{overflow-x:auto}
-.status{font-size:13px;color:#fbbf24;line-height:1.8;overflow-wrap:anywhere}
-hr{border:0;border-top:1px solid #29374e;margin:14px 0}
-#installApp{
-position:fixed;
-bottom:18px;
-right:14px;
-z-index:9999;
-width:auto;
-max-width:calc(100% - 28px);
-border-radius:30px;
-padding:13px 18px;
-box-shadow:0 4px 18px #0008;
-}
-@media(max-width:480px){
-.row{grid-template-columns:1fr}
-header h1{font-size:23px}
-}
+.green{background:#059669}.red{background:#dc2626}.primary{background:#e85d68;color:#180b0d}.blue{background:#2563eb}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;min-width:490px}
+th,td{padding:10px 7px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}th{color:var(--muted)}
+.coinline{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.coinline:last-child{border-bottom:0}.coinname{font-weight:bold}.coinname small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.price{direction:ltr;text-align:left;font-weight:bold}.tag{font-size:11px;border-radius:20px;padding:5px 8px;background:#183c32;color:var(--green)}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#101a2b;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 25px #0005}
+.navbtn{background:transparent;color:#8fa1ba;margin:0;padding:7px 2px;border-radius:12px;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.navbtn span{font-size:20px}.navbtn.active{background:#26364f;color:#fff}
+.navbtn.active span{filter:drop-shadow(0 0 5px #f87171)}
+.install-float{position:fixed;left:12px;top:90px;z-index:30;width:auto;padding:9px 12px;border-radius:22px;background:#f87171;color:#111827;box-shadow:0 4px 16px #0007;font-size:12px}
+.chart{height:390px}.chart iframe{width:100%;height:100%;border:0;border-radius:10px}
+.actiongrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-line{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.info-line:last-child{border:0}
+@media(max-width:480px){main{padding:10px}.row{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.big{font-size:20px}.chart{height:330px}.install-float{top:84px}}
 </style>
 </head>
-
 <body>
+<header><div class="headrow">
+  <div class="brand"><div class="logo">🏆</div><div><h1>Trading Sport</h1><p>تمرین هوشمند معامله‌گری</p></div></div>
+  <div class="demo-badge">● حساب دمو</div>
+</div></header>
 
-<header>
-<h1>🏆 Trading Sport</h1>
-<p>پلتفرم تمرینی معاملات ارز دیجیتال</p>
-</header>
+<button id="installApp" class="install-float" style="display:none">📲 نصب برنامه</button>
 
 <main>
-
-<section class="card">
-<h2>📲 اپلیکیشن</h2>
-<p class="muted">
-می‌توانی در صورت پشتیبانی مرورگر، برنامه را روی صفحه اصلی گوشی نصب کنی.
-</p>
-<button id="installApp" class="install">📲 نصب اپلیکیشن</button>
-<div id="installStatus" class="muted"></div>
+<!-- خانه -->
+<section id="page-home" class="page active">
+  <div class="card">
+    <h2>سلام، خوش آمدی 👋</h2>
+    <p class="muted">به فضای تمرینی Trading Sport خوش آمدی. تمام معاملات این برنامه آزمایشی هستند و پول واقعی جابه‌جا نمی‌شود.</p>
+    <div class="stats">
+      <div class="stat"><small>موجودی آزاد</small><strong id="homeBalance">—</strong><small>تومان</small></div>
+      <div class="stat"><small>سود و زیان بسته‌شده</small><strong id="homeRealized">—</strong><small>تومان</small></div>
+      <div class="stat"><small>معاملات باز</small><strong id="homeOpenCount">۰</strong><small>معامله</small></div>
+      <div class="stat"><small>قیمت بیت‌کوین</small><strong id="homeBtc">—</strong><small>تومان</small></div>
+    </div>
+    <div id="homeStatus" class="status" style="margin-top:12px">در حال اتصال...</div>
+    <div class="actiongrid">
+      <button class="primary" data-go="trade">📈 شروع معامله</button>
+      <button class="blue" data-go="market">📊 مشاهده بازار</button>
+    </div>
+  </div>
+  <div class="card"><h2>📌 معاملات باز اخیر</h2>
+    <div class="tablewrap"><table><thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>سود/زیان</th></tr></thead><tbody id="homeOpenTrades"><tr><td colspan="4">در حال بارگذاری...</td></tr></tbody></table></div>
+    <button data-go="trade">رفتن به صفحه معامله</button>
+  </div>
+  <div class="card"><h2>⚠️ یادآوری</h2><p class="muted">قیمت‌ها برای تمرین هستند. حد سود و ضرر فقط تا زمانی که صفحه باز و در حال اجرا باشد بررسی می‌شوند؛ بسته‌بودن مرورگر اجرای خودکار را تضمین نمی‌کند.</p></div>
 </section>
 
-<section class="card">
-<h2>👤 حساب کاربری</h2>
-<div id="userInfo">در حال بررسی حساب...</div>
-<button id="logout" class="red" style="display:none">خروج از حساب</button>
-<p class="muted">این نسخه دمو است؛ معامله واقعی و برداشت وجه ندارد.</p>
+<!-- بازار -->
+<section id="page-market" class="page">
+  <div class="card"><h2>📊 بازار ارزهای دیجیتال</h2>
+    <div class="coinline"><div class="coinname">₿ Bitcoin <small>BTC / تومان</small></div><div><div class="price" id="marketBtc">—</div><div class="tag" id="marketBtcStatus">در انتظار</div></div></div>
+    <p class="muted">در حال حاضر سرور متصل‌شده در این نسخه فقط قیمت بیت‌کوین را ارائه می‌کند. برای نمایش قیمت زنده سایر ارزها باید API سرور توسعه داده شود.</p>
+    <div id="marketStatus" class="status">در انتظار دریافت قیمت...</div>
+    <button id="refreshMarket" class="blue">🔄 به‌روزرسانی بازار</button>
+  </div>
+  <div class="card"><h2>📉 نمودار بیت‌کوین</h2><div class="chart"><iframe src="https://s.tradingview.com/widgetembed/?symbol=COINBASE%3ABTCUSD&interval=15&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=%230b1120&theme=dark&style=1&timezone=Etc%2FUTC" title="نمودار بیت کوین" loading="lazy"></iframe></div><p class="muted">نمودار BTC/USD از TradingView نمایش داده می‌شود؛ قیمت آن ممکن است با قیمت تومانی سرور تفاوت داشته باشد.</p></div>
 </section>
 
-<section class="card">
-<h2>💰 حساب دمو</h2>
-<div class="row">
-<div>
-<label>موجودی آزاد</label>
-<div id="balance" class="big">—</div>
-<div class="muted">تومان</div>
-</div>
-<div>
-<label>سود و زیان بسته‌شده</label>
-<div id="realized" class="big">—</div>
-<div class="muted">تومان</div>
-</div>
-</div>
-<hr>
-<label>وضعیت قیمت بیت‌کوین</label>
-<div id="priceStatus" class="status">در حال اتصال...</div>
-<label>قیمت BTC</label>
-<div id="btcPrice" class="big">در انتظار قیمت...</div>
-<div class="muted">قیمت تقریبی به تومان · به‌روزرسانی دوره‌ای</div>
-<button id="refresh">🔄 به‌روزرسانی اطلاعات</button>
+<!-- معامله -->
+<section id="page-trade" class="page">
+  <div class="card"><h2>📈 بازکردن معامله دمو</h2>
+    <div class="row"><div><label>قیمت فعلی BTC</label><div id="tradeCurrentPrice" class="big">—</div></div><div><label>موجودی آزاد</label><div id="tradeBalance" class="big">—</div></div></div>
+    <label>ارز دیجیتال</label><select id="symbol"><option value="BTC">Bitcoin (BTC)</option></select>
+    <label>جهت معامله</label><select id="side"><option value="LONG">LONG — افزایش قیمت</option><option value="SHORT">SHORT — کاهش قیمت</option></select>
+    <label>مارجین (تومان)</label><input id="margin" type="number" min="1" step="any" value="100000">
+    <label>اهرم</label><select id="leverage"><option value="1">۱ برابر</option><option value="2">۲ برابر</option><option value="3">۳ برابر</option><option value="5">۵ برابر</option><option value="10">۱۰ برابر</option><option value="20">۲۰ برابر</option></select>
+    <label>حد ضرر (تومان، اختیاری)</label><input id="sl" type="number" min="0" placeholder="بدون حد ضرر">
+    <label>حد سود (تومان، اختیاری)</label><input id="tp" type="number" min="0" placeholder="بدون حد سود">
+    <button id="openTrade" class="green">🚀 بازکردن معامله دمو</button>
+    <div id="tradeMessage" class="status"></div>
+    <p class="muted">مارجین از موجودی آزاد دمو رزرو می‌شود. اهرم سود و زیان را بزرگ‌تر می‌کند. زیان هر معامله در شبیه‌ساز به مارجین رزروشده محدود است.</p>
+  </div>
+  <div class="card"><h2>📂 معاملات باز</h2><div class="tablewrap"><table><thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>قیمت فعلی</th><th>سود/زیان</th><th>عملیات</th></tr></thead><tbody id="openTrades"><tr><td colspan="6">در حال بارگذاری...</td></tr></tbody></table></div></div>
+  <div class="card"><h2>🧾 تاریخچه معاملات</h2><div class="tablewrap"><table><thead><tr><th>ارز</th><th>جهت</th><th>ورود</th><th>خروج</th><th>سود/زیان</th><th>وضعیت</th></tr></thead><tbody id="history"><tr><td colspan="6">در حال بارگذاری...</td></tr></tbody></table></div></div>
 </section>
 
-<section class="card">
-<h2>📊 قیمت ارزها</h2>
-<div class="tablewrap">
-<table>
-<thead>
-<tr><th>ارز</th><th>قیمت تومان</th><th>وضعیت</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>Bitcoin (BTC)</td>
-<td id="btcTablePrice">—</td>
-<td id="btcTableStatus">در انتظار</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="muted">قیمت بیت‌کوین از سرور Trading Sport دریافت می‌شود.</p>
+<!-- تنظیمات -->
+<section id="page-settings" class="page">
+  <div class="card"><h2>⚙️ تنظیمات برنامه</h2>
+    <div class="info-line"><span>نوع حساب</span><strong style="color:#fbbf24">دمو / آزمایشی</strong></div>
+    <div class="info-line"><span>واحد موجودی</span><strong>تومان</strong></div>
+    <div class="info-line"><span>بازار معاملاتی</span><strong>BTC</strong></div>
+    <div class="info-line"><span>وضعیت قیمت</span><strong id="settingsPriceStatus">—</strong></div>
+    <div class="info-line"><span>نسخه</span><strong>Trading Sport 2.0</strong></div>
+    <button id="settingsRefresh" class="blue">🔄 تازه‌سازی اطلاعات حساب</button>
+  </div>
+  <div class="card"><h2>👤 حساب کاربری</h2><div id="userInfo" class="muted">در حال بررسی حساب...</div><button id="logout" class="red" style="display:none">خروج از حساب</button></div>
+  <div class="card"><h2>📲 نصب اپلیکیشن</h2><p class="muted">اگر مرورگر نصب مستقیم را پشتیبانی کند، دکمه نصب بالای صفحه ظاهر می‌شود. در غیر این صورت از منوی سه‌نقطه مرورگر گزینه Install app یا Add to Home screen را انتخاب کن.</p><div id="installStatus" class="status"></div></div>
+  <div class="card"><h2>درباره حساب دمو</h2><p class="muted">این نسخه فقط برای تمرین معامله‌گری است. سفارش واقعی، واریز و برداشت وجه ندارد. موجودی نمایشی است و قیمت‌ها ممکن است با تأخیر یا اختلاف نمایش داده شوند.</p></div>
 </section>
-
-<section class="card">
-<h2>📈 بازکردن معامله دمو</h2>
-
-<label>ارز دیجیتال</label>
-<select id="symbol">
-<option value="BTC">Bitcoin (BTC)</option>
-</select>
-
-<label>جهت معامله</label>
-<select id="side">
-<option value="LONG">LONG — افزایش قیمت</option>
-<option value="SHORT">SHORT — کاهش قیمت</option>
-</select>
-
-<label>مارجین (تومان)</label>
-<input id="margin" type="number" min="1" step="any" value="100000">
-
-<label>اهرم</label>
-<select id="leverage">
-<option value="1">۱ برابر</option>
-<option value="2">۲ برابر</option>
-<option value="3">۳ برابر</option>
-<option value="5">۵ برابر</option>
-<option value="10">۱۰ برابر</option>
-<option value="20">۲۰ برابر</option>
-</select>
-
-<label>حد ضرر (تومان، اختیاری)</label>
-<input id="sl" type="number" min="0" placeholder="بدون حد ضرر">
-
-<label>حد سود (تومان، اختیاری)</label>
-<input id="tp" type="number" min="0" placeholder="بدون حد سود">
-
-<button id="openTrade" class="green">🚀 بازکردن معامله دمو</button>
-<div id="tradeMessage" class="status"></div>
-
-<p class="muted">
-مارجین از موجودی آزاد کسر می‌شود. اهرم سود و زیان را افزایش می‌دهد.
-زیان هر معامله در شبیه‌ساز به مارجین رزروشده محدود شده است.
-</p>
-</section>
-
-<section class="card">
-<h2>📂 معاملات باز</h2>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>ارز</th><th>جهت</th><th>ورود</th>
-<th>قیمت فعلی</th><th>سود/زیان</th><th>عملیات</th>
-</tr>
-</thead>
-<tbody id="openTrades">
-<tr><td colspan="6">در حال بارگذاری...</td></tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<section class="card">
-<h2>🧾 تاریخچه معاملات</h2>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>ارز</th><th>جهت</th><th>ورود</th>
-<th>خروج</th><th>سود/زیان</th><th>وضعیت</th>
-</tr>
-</thead>
-<tbody id="history">
-<tr><td colspan="6">در حال بارگذاری...</td></tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<section class="card">
-<h2>📉 نمودار بیت‌کوین</h2>
-<div style="height:420px">
-<iframe
-src="https://s.tradingview.com/widgetembed/?symbol=COINBASE%3ABTCUSD&interval=15&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=%230b1120&theme=dark&style=1&timezone=Etc%2FUTC"
-style="width:100%;height:100%;border:0;border-radius:10px"
-title="نمودار بیت کوین"
-loading="lazy">
-</iframe>
-</div>
-</section>
-
-<section class="card">
-<h2>⚠️ نکات مهم</h2>
-<p class="muted">
-این برنامه فقط برای تمرین است و به بازار واقعی سفارش ارسال نمی‌کند.
-قیمت‌ها تقریبی هستند. بررسی حد سود و حد ضرر فقط وقتی صفحه باز است
-و کد بررسی قیمت‌ها در حال اجراست انجام می‌شود.
-بستن مرورگر، اجرای خودکار حد سود و ضرر را تضمین نمی‌کند.
-</p>
-</section>
-
 </main>
+
+<nav class="bottomnav" aria-label="ناوبری اصلی">
+  <button class="navbtn active" data-page="home"><span>🏠</span>خانه</button>
+  <button class="navbtn" data-page="market"><span>📊</span>بازار</button>
+  <button class="navbtn" data-page="trade"><span>📈</span>معامله</button>
+  <button class="navbtn" data-page="settings"><span>⚙️</span>تنظیمات</button>
+</nav>
 
 <script>
 "use strict";
+const SUPABASE_URL="https://iickqivnqqveqgatfowb.supabase.co";
+const SUPABASE_KEY="sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
+const PRICE_API="https://trading-sport-api.onrender.com/api/prices";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let user=null,account=null,btcPrice=0,busy=false,refreshing=false,installPrompt=null;
 
-const SUPABASE_URL = "https://iickqivnqqveqgatfowb.supabase.co";
-const SUPABASE_KEY = "sb_publishable_hu0zVW9P-lg97ICdw9NbAA_7jQBSO4e";
-const PRICE_API = "https://trading-sport-api.onrender.com/api/prices";
+function money(n){if(!Number.isFinite(Number(n)))return "—";return Number(n).toLocaleString("fa-IR",{maximumFractionDigits:2});}
+function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function message(text,ok=false){$("tradeMessage").style.color=ok?"#4ade80":"#fbbf24";$("tradeMessage").textContent=text;}
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-const $ = id => document.getElementById(id);
-
-let user = null;
-let account = null;
-let btcPrice = 0;
-let busy = false;
-let installPrompt = null;
-let refreshing = false;
-
-function money(n) {
-  if (!Number.isFinite(Number(n))) return "—";
-
-  return Number(n).toLocaleString("fa-IR", {
-    maximumFractionDigits: 2
-  });
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+  window.scrollTo({top:0,behavior:"smooth"});
 }
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.go)));
 
-function safe(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  }[c]));
+async function getUser(){
+  const {data,error}=await db.auth.getUser();if(error)throw error;user=data.user;
+  if(!user){$("userInfo").innerHTML='وارد حساب نشده‌ای. <a style="color:#60a5fa" href="./auth.html">ورود یا ثبت‌نام</a>';$("logout").style.display="none";$("openTrade").disabled=true;return false;}
+  $("userInfo").textContent="وارد شده‌ای: "+user.email;$("logout").style.display="block";$("openTrade").disabled=false;return true;
 }
-
-function message(text, ok = false) {
-  $("tradeMessage").style.color =
-    ok ? "#4ade80" : "#fbbf24";
-
-  $("tradeMessage").textContent = text;
+async function loadAccount(){
+  const {data,error}=await db.from("demo_accounts").select("*").eq("user_id",user.id).maybeSingle();
+  if(error)throw error;if(!data)throw new Error("حساب دمو پیدا نشد.");account=data;
+  $("homeBalance").textContent=money(data.balance);$("homeRealized").textContent=money(data.realized||0);
+  $("tradeBalance").textContent=money(data.balance);$("balanceDummy")&&($("balanceDummy").textContent=money(data.balance));
 }
-
-async function getUser() {
-  const { data, error } = await db.auth.getUser();
-
-  if (error) throw error;
-
-  user = data.user;
-
-  if (!user) {
-    $("userInfo").innerHTML =
-      'وارد حساب نشده‌ای. <a style="color:#60a5fa" href="./auth.html">ورود یا ثبت‌نام</a>';
-
-    $("logout").style.display = "none";
-    $("openTrade").disabled = true;
-
-    return false;
-  }
-
-  $("userInfo").textContent =
-    "وارد شده‌ای: " + user.email;
-
-  $("logout").style.display = "block";
-
-  return true;
-}
-
-async function loadAccount() {
-  const { data, error } = await db
-    .from("demo_accounts")
-    .select("*")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (error) throw error;
-
-  if (!data) {
-    throw new Error("حساب دمو پیدا نشد.");
-  }
-
-  account = data;
-
-  $("balance").textContent = money(data.balance);
-  $("realized").textContent = money(data.realized || 0);
-}
-
-async function loadPrices() {
-  $("priceStatus").textContent = "در حال دریافت قیمت...";
-  $("btcTableStatus").textContent = "در حال دریافت";
-
-  try {
-    const response = await fetch(PRICE_API, {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error("خطای سرور قیمت: HTTP " + response.status);
-    }
-
-    const data = await response.json();
-
-    if (data.success !== true) {
-      throw new Error(data.error || "دریافت قیمت ناموفق بود");
-    }
-
-    const price = Number(data.prices?.BTC);
-
-    if (!Number.isFinite(price) || price <= 0) {
-      throw new Error("قیمت بیت‌کوین معتبر نیست");
-    }
-
-    btcPrice = price;
-
-    let updatedText = "";
-
-    if (data.updatedAt) {
-      const date = new Date(data.updatedAt);
-
-      if (!Number.isNaN(date.getTime())) {
-        updatedText = " — " +
-          date.toLocaleTimeString("fa-IR");
-      }
-    }
-
-    $("priceStatus").textContent =
-      "متصل" + updatedText;
-
-    $("priceStatus").style.color = "#4ade80";
-
-    $("btcPrice").textContent =
-      money(btcPrice) + " تومان";
-
-    $("btcTablePrice").textContent = money(btcPrice);
-    $("btcTableStatus").textContent = "متصل";
-
-    return true;
-
-  } catch (error) {
-    $("priceStatus").textContent =
-      "خطا در دریافت قیمت: " + error.message;
-
-    $("priceStatus").style.color = "#f87171";
-    $("btcTableStatus").textContent = "خطا";
-    $("btcTablePrice").textContent = "—";
-    $("btcPrice").textContent = "قیمت موجود نیست";
-
-    btcPrice = 0;
-
-    return false;
+async function loadPrices(){
+  $("marketStatus").textContent="در حال دریافت قیمت...";
+  try{
+    const response=await fetch(PRICE_API,{cache:"no-store"});
+    if(!response.ok)throw new Error("خطای سرور قیمت: HTTP "+response.status);
+    const data=await response.json();if(data.success!==true)throw new Error(data.error||"دریافت قیمت ناموفق بود");
+    const p=Number(data.prices?.BTC);if(!Number.isFinite(p)||p<=0)throw new Error("قیمت بیت‌کوین معتبر نیست");
+    btcPrice=p;
+    let stamp="";if(data.updatedAt){const d=new Date(data.updatedAt);if(!Number.isNaN(d.getTime()))stamp=" — "+d.toLocaleTimeString("fa-IR");}
+    $("marketStatus").textContent="اتصال برقرار است"+stamp;$("marketStatus").style.color="#4ade80";
+    $("marketBtc").textContent=money(p)+" تومان";$("marketBtcStatus").textContent="متصل";
+    $("homeBtc").textContent=money(p);$("tradeCurrentPrice").textContent=money(p);
+    $("settingsPriceStatus").textContent="متصل";return true;
+  }catch(e){
+    btcPrice=0;$("marketStatus").textContent="خطا در دریافت قیمت: "+e.message;$("marketStatus").style.color="#f87171";
+    $("marketBtc").textContent="—";$("marketBtcStatus").textContent="خطا";$("homeBtc").textContent="—";$("tradeCurrentPrice").textContent="—";$("settingsPriceStatus").textContent="خطا";return false;
   }
 }
-
-function calculatePnl(trade, price) {
-  if (!price) return 0;
-
-  const entry = Number(trade.entry_price);
-  const qty = Number(trade.quantity);
-  const margin = Number(trade.margin || 0);
-  const direction = trade.side === "LONG" ? 1 : -1;
-
-  return Math.max(
-    -margin,
-    (price - entry) * qty * direction
-  );
+function calculatePnl(t,p){
+  if(!p)return 0;const entry=Number(t.entry_price),qty=Number(t.quantity),margin=Number(t.margin||0),dir=t.side==="LONG"?1:-1;
+  return Math.max(-margin,(p-entry)*qty*dir);
 }
-
-async function loadTrades() {
-  const { data, error } = await db
-    .from("demo_trades")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("opened_at", { ascending: false })
-    .limit(100);
-
-  if (error) throw error;
-
-  const trades = data || [];
-
-  const open = trades.filter(t => t.status === "OPEN");
-  const closed = trades.filter(t => t.status !== "OPEN");
-
-  $("openTrades").innerHTML = open.length
-    ? open.map(t => {
-        const pnl = calculatePnl(t, btcPrice);
-
-        return `<tr>
-          <td>${safe(t.symbol)}</td>
-          <td>${safe(t.side)}</td>
-          <td>${money(t.entry_price)}</td>
-          <td>${btcPrice ? money(btcPrice) : "—"}</td>
-          <td style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">
-            ${btcPrice ? money(pnl) : "—"}
-          </td>
-          <td>
-            <button data-close="${safe(t.id)}" class="red">
-              بستن
-            </button>
-          </td>
-        </tr>`;
-      }).join("")
-    : '<tr><td colspan="6">معامله بازی وجود ندارد.</td></tr>';
-
-  $("history").innerHTML = closed.length
-    ? closed.map(t => `
-        <tr>
-          <td>${safe(t.symbol)}</td>
-          <td>${safe(t.side)}</td>
-          <td>${money(t.entry_price)}</td>
-          <td>${money(t.exit_price)}</td>
-          <td style="color:${Number(t.profit_loss) >= 0 ? "#4ade80" : "#f87171"}">
-            ${money(t.profit_loss)}
-          </td>
-          <td>${safe(t.status)}</td>
-        </tr>
-      `).join("")
-    : '<tr><td colspan="6">تاریخچه‌ای وجود ندارد.</td></tr>';
+async function loadTrades(){
+  const {data,error}=await db.from("demo_trades").select("*").eq("user_id",user.id).order("opened_at",{ascending:false}).limit(100);
+  if(error)throw error;const trades=data||[],open=trades.filter(t=>t.status==="OPEN"),closed=trades.filter(t=>t.status!=="OPEN");
+  $("homeOpenCount").textContent=String(open.length).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
+  $("openTrades").innerHTML=open.length?open.map(t=>{const pnl=calculatePnl(t,btcPrice);return `<tr><td>${safe(t.symbol)}</td><td>${safe(t.side)}</td><td>${money(t.entry_price)}</td><td>${btcPrice?money(btcPrice):"—"}</td><td style="color:${pnl>=0?"#4ade80":"#f87171"}">${btcPrice?money(pnl):"—"}</td><td><button data-close="${safe(t.id)}" class="red">بستن</button></td></tr>`;}).join(""):'<tr><td colspan="6">معامله بازی وجود ندارد.</td></tr>';
+  $("homeOpenTrades").innerHTML=open.length?open.slice(0,5).map(t=>{const pnl=calculatePnl(t,btcPrice);return `<tr><td>${safe(t.symbol)}</td><td>${safe(t.side)}</td><td>${money(t.entry_price)}</td><td style="color:${pnl>=0?"#4ade80":"#f87171"}">${btcPrice?money(pnl):"—"}</td></tr>`;}).join(""):'<tr><td colspan="4">معامله بازی وجود ندارد.</td></tr>';
+  $("history").innerHTML=closed.length?closed.map(t=>`<tr><td>${safe(t.symbol)}</td><td>${safe(t.side)}</td><td>${money(t.entry_price)}</td><td>${money(t.exit_price)}</td><td style="color:${Number(t.profit_loss)>=0?"#4ade80":"#f87171"}">${money(t.profit_loss)}</td><td>${safe(t.status)}</td></tr>`).join(""):'<tr><td colspan="6">تاریخچه‌ای وجود ندارد.</td></tr>';
 }
-
-async function refreshAll() {
-  if (!user || refreshing) return;
-
-  refreshing = true;
-
-  try {
-    const priceOK = await loadPrices();
-
-    await loadAccount();
-    await loadTrades();
-
-    if (priceOK) {
-      await checkStops();
-    }
-
-  } catch (error) {
-    message("خطا در دریافت اطلاعات: " + error.message);
-
-  } finally {
-    refreshing = false;
+async function refreshAll(){
+  if(!user||refreshing)return;refreshing=true;
+  try{const priceOK=await loadPrices();await loadAccount();await loadTrades();$("homeStatus").textContent=priceOK?"قیمت بازار دریافت شد؛ حساب دمو آماده تمرین است.":"حساب دمو متصل است، اما دریافت قیمت با خطا مواجه شد.";if(priceOK)await checkStops();}
+  catch(e){message("خطا در دریافت اطلاعات: "+e.message);}
+  finally{refreshing=false;}
+}
+async function checkStops(){
+  if(!btcPrice||busy)return;const {data,error}=await db.from("demo_trades").select("*").eq("user_id",user.id).eq("status","OPEN");if(error)return;
+  for(const t of data||[]){const sl=Number(t.stop_loss),tp=Number(t.take_profit);
+    const stopHit=sl>0&&((t.side==="LONG"&&btcPrice<=sl)||(t.side==="SHORT"&&btcPrice>=sl));
+    const takeHit=tp>0&&((t.side==="LONG"&&btcPrice>=tp)||(t.side==="SHORT"&&btcPrice<=tp));
+    if(stopHit||takeHit)await closeTrade(t.id,true);
   }
 }
-
-async function checkStops() {
-  if (!btcPrice || busy) return;
-
-  const { data, error } = await db
-    .from("demo_trades")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("status", "OPEN");
-
-  if (error) return;
-
-  for (const t of data || []) {
-    const sl = Number(t.stop_loss);
-    const tp = Number(t.take_profit);
-
-    const stopHit = sl > 0 && (
-      (t.side === "LONG" && btcPrice <= sl) ||
-      (t.side === "SHORT" && btcPrice >= sl)
-    );
-
-    const takeHit = tp > 0 && (
-      (t.side === "LONG" && btcPrice >= tp) ||
-      (t.side === "SHORT" && btcPrice <= tp)
-    );
-
-    if (stopHit || takeHit) {
-      await closeTrade(t.id, true);
-    }
-  }
+async function openTrade(){
+  if(busy)return;if(!user){message("ابتدا وارد حساب شو.");return;}if(!btcPrice){message("قیمت بیت‌کوین موجود نیست؛ بازار را تازه‌سازی کن.");return;}
+  const margin=Number($("margin").value),leverage=Number($("leverage").value),side=$("side").value;
+  const slRaw=$("sl").value.trim(),tpRaw=$("tp").value.trim(),sl=slRaw===""?null:Number(slRaw),tp=tpRaw===""?null:Number(tpRaw);
+  if(!Number.isFinite(margin)||margin<=0){message("مارجین باید عددی بزرگ‌تر از صفر باشد.");return;}
+  if(!Number.isFinite(leverage)||leverage<1||leverage>20){message("اهرم معتبر نیست.");return;}
+  if(margin>Number(account?.balance??0)){message("موجودی آزاد برای این مارجین کافی نیست.");return;}
+  if(sl!==null&&(!Number.isFinite(sl)||sl<=0)){message("حد ضرر معتبر نیست.");return;}
+  if(tp!==null&&(!Number.isFinite(tp)||tp<=0)){message("حد سود معتبر نیست.");return;}
+  if(side==="LONG"&&((sl!==null&&sl>=btcPrice)||(tp!==null&&tp<=btcPrice))){message("برای LONG، حد ضرر پایین‌تر و حد سود بالاتر از قیمت ورود باشد.");return;}
+  if(side==="SHORT"&&((sl!==null&&sl<=btcPrice)||(tp!==null&&tp>=btcPrice))){message("برای SHORT، حد ضرر بالاتر و حد سود پایین‌تر از قیمت ورود باشد.");return;}
+  busy=true;$("openTrade").disabled=true;message("در حال بازکردن معامله دمو...");
+  try{const {error}=await db.rpc("open_leverage_trade",{p_symbol:"BTC",p_side:side,p_price:btcPrice,p_margin:margin,p_leverage:leverage,p_stop_loss:sl,p_take_profit:tp});if(error)throw error;
+    message("معامله دمو با موفقیت باز شد.",true);$("sl").value="";$("tp").value="";await refreshAll();
+  }catch(e){message("معامله باز نشد: "+e.message);}
+  finally{busy=false;$("openTrade").disabled=false;}
 }
-
-async function openTrade() {
-  if (busy) return;
-
-  if (!user) {
-    message("ابتدا وارد حساب شو.");
-    return;
-  }
-
-  if (!btcPrice) {
-    message("قیمت بیت‌کوین موجود نیست. ابتدا دریافت قیمت را بررسی کن.");
-    return;
-  }
-
-  const margin = Number($("margin").value);
-  const leverage = Number($("leverage").value);
-  const side = $("side").value;
-
-  const slRaw = $("sl").value.trim();
-  const tpRaw = $("tp").value.trim();
-
-  const sl = slRaw === "" ? null : Number(slRaw);
-  const tp = tpRaw === "" ? null : Number(tpRaw);
-
-  if (!Number.isFinite(margin) || margin <= 0) {
-    message("مارجین باید عددی بزرگ‌تر از صفر باشد.");
-    return;
-  }
-
-  if (!Number.isFinite(leverage) || leverage < 1 || leverage > 20) {
-    message("اهرم معتبر نیست.");
-    return;
-  }
-
-  if (margin > Number(account?.balance ?? 0)) {
-    message("موجودی آزاد برای این مارجین کافی نیست.");
-    return;
-  }
-
-  if (sl !== null && (!Number.isFinite(sl) || sl <= 0)) {
-    message("حد ضرر معتبر نیست.");
-    return;
-  }
-
-  if (tp !== null && (!Number.isFinite(tp) || tp <= 0)) {
-    message("حد سود معتبر نیست.");
-    return;
-  }
-
-  if (side === "LONG" && (
-    (sl !== null && sl >= btcPrice) ||
-    (tp !== null && tp <= btcPrice)
-  )) {
-    message("برای LONG، حد ضرر باید پایین‌تر و حد سود بالاتر از قیمت ورود باشد.");
-    return;
-  }
-
-  if (side === "SHORT" && (
-    (sl !== null && sl <= btcPrice) ||
-    (tp !== null && tp >= btcPrice)
-  )) {
-    message("برای SHORT، حد ضرر باید بالاتر و حد سود پایین‌تر از قیمت ورود باشد.");
-    return;
-  }
-
-  busy = true;
-  $("openTrade").disabled = true;
-
-  message("در حال بازکردن معامله...");
-
-  try {
-    const { error } = await db.rpc("open_leverage_trade", {
-      p_symbol: "BTC",
-      p_side: side,
-      p_price: btcPrice,
-      p_margin: margin,
-      p_leverage: leverage,
-      p_stop_loss: sl,
-      p_take_profit: tp
-    });
-
-    if (error) throw error;
-
-    message("معامله دمو با موفقیت باز شد.", true);
-
-    $("sl").value = "";
-    $("tp").value = "";
-
-    await refreshAll();
-
-  } catch (error) {
-    message("معامله باز نشد: " + error.message);
-
-  } finally {
-    busy = false;
-    $("openTrade").disabled = false;
-  }
+async function closeTrade(id,automatic=false){
+  if(busy)return;if(!btcPrice){message("قیمت بیت‌کوین موجود نیست.");return;}if(!automatic&&!confirm("معامله دمو بسته شود؟"))return;
+  busy=true;try{const {error}=await db.rpc("close_leverage_trade",{p_trade_id:id,p_exit_price:btcPrice});if(error)throw error;
+    message(automatic?"معامله به دلیل رسیدن به حد سود یا ضرر بسته شد.":"معامله بسته شد.",true);await loadAccount();await loadTrades();
+  }catch(e){message("بستن معامله ناموفق بود: "+e.message);}finally{busy=false;}
 }
+$("openTrade").addEventListener("click",openTrade);
+$("openTrades").addEventListener("click",async e=>{const b=e.target.closest("[data-close]");if(b)await closeTrade(b.dataset.close);});
+$("logout").addEventListener("click",async()=>{const {error}=await db.auth.signOut();if(error){message("خروج ناموفق بود: "+error.message);return;}location.href="./auth.html";});
+$("refreshMarket").addEventListener("click",refreshAll);$("settingsRefresh").addEventListener("click",refreshAll);
 
-async function closeTrade(id, automatic = false) {
-  if (busy) return;
-
-  if (!btcPrice) {
-    message("قیمت بیت‌کوین موجود نیست.");
-    return;
-  }
-
-  if (!automatic && !confirm("معامله دمو بسته شود؟")) {
-    return;
-  }
-
-  busy = true;
-
-  try {
-    const { error } = await db.rpc("close_leverage_trade", {
-      p_trade_id: id,
-      p_exit_price: btcPrice
-    });
-
-    if (error) throw error;
-
-    message(
-      automatic
-        ? "معامله به دلیل رسیدن به حد سود یا ضرر بسته شد."
-        : "معامله بسته شد.",
-      true
-    );
-
-    await loadAccount();
-    await loadTrades();
-
-  } catch (error) {
-    message("بستن معامله ناموفق بود: " + error.message);
-
-  } finally {
-    busy = false;
-  }
-}
-
-$("logout").addEventListener("click", async () => {
-  const { error } = await db.auth.signOut();
-
-  if (error) {
-    message("خروج ناموفق بود: " + error.message);
-    return;
-  }
-
-  location.href = "./auth.html";
+const installButton=$("installApp"),installStatus=$("installStatus");
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;installButton.style.display="block";});
+installButton.addEventListener("click",async()=>{
+  if(window.matchMedia("(display-mode: standalone)").matches){installStatus.textContent="برنامه از قبل نصب شده است.";return;}
+  if(installPrompt){installPrompt.prompt();const result=await installPrompt.userChoice;installStatus.textContent=result.outcome==="accepted"?"درخواست نصب پذیرفته شد.":"نصب لغو شد.";installPrompt=null;}
+  else{installStatus.textContent="در Chrome منوی سه‌نقطه را باز کن و Install app یا Add to Home screen را انتخاب کن.";}
 });
-
-$("refresh").addEventListener("click", refreshAll);
-$("openTrade").addEventListener("click", openTrade);
-
-$("openTrades").addEventListener("click", async event => {
-  const button = event.target.closest("[data-close]");
-
-  if (button) {
-    await closeTrade(button.dataset.close);
-  }
-});
-
-/* نصب اپلیکیشن */
-
-const installButton = $("installApp");
-const installStatus = $("installStatus");
-
-window.addEventListener("beforeinstallprompt", event => {
-  event.preventDefault();
-
-  installPrompt = event;
-
-  installStatus.textContent =
-    "برنامه آماده نصب است. روی دکمه بالا بزن.";
-
-  installButton.textContent = "📲 نصب Trading Sport";
-});
-
-installButton.addEventListener("click", async () => {
-  if (window.matchMedia("(display-mode: standalone)").matches) {
-    installStatus.textContent =
-      "برنامه از قبل نصب شده است.";
-
-    return;
-  }
-
-  if (installPrompt) {
-    installPrompt.prompt();
-
-    const result = await installPrompt.userChoice;
-
-    installStatus.textContent =
-      result.outcome === "accepted"
-        ? "درخواست نصب پذیرفته شد."
-        : "نصب لغو شد.";
-
-    installPrompt = null;
-
-    return;
-  }
-
-  installStatus.textContent =
-    "در Chrome، منوی سه‌نقطه را باز کن و اگر موجود بود، Install app یا Add to Home screen را انتخاب کن.";
-});
-
-window.addEventListener("appinstalled", () => {
-  installStatus.textContent =
-    "Trading Sport با موفقیت نصب شد.";
-
-  installButton.textContent = "✅ اپلیکیشن نصب شد";
-});
-
-/* اتصال سرویس‌ورکر */
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => {
-        console.log("Trading Sport service worker ready");
-      })
-      .catch(error => {
-        console.error("Service Worker error:", error);
-      });
-  });
+window.addEventListener("appinstalled",()=>{installButton.textContent="✅ نصب شد";installStatus.textContent="Trading Sport با موفقیت نصب شد.";});
+if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(e=>console.error("Service Worker:",e)));}
+async function start(){
+  try{const signedIn=await getUser();if(!signedIn){$("homeStatus").textContent="برای استفاده از حساب دمو ابتدا وارد حساب شو.";return;}await refreshAll();setInterval(refreshAll,15000);}
+  catch(e){$("userInfo").textContent="خطا در اتصال: "+e.message;$("homeStatus").textContent="اتصال ناموفق بود: "+e.message;}
 }
-
-async function start() {
-  try {
-    const signedIn = await getUser();
-
-    if (!signedIn) return;
-
-    await refreshAll();
-
-    // بررسی قیمت و حد سود/ضرر فقط هنگام بازبودن صفحه
-    setInterval(refreshAll, 15000);
-
-  } catch (error) {
-    $("userInfo").textContent =
-      "خطا در اتصال: " + error.message;
-  }
-}
-
 start();
 </script>
-
 </body>
 </html>
