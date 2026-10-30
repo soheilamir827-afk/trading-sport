@@ -11,12 +11,14 @@
 <title>Trading Sport</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#080e1b;--panel:#111c30;--panel2:#17243a;--line:#263650;--text:#f1f5f9;--muted:#91a2ba;--red:#f87171;--green:#34d399;--blue:#60a5fa}
+:root{color-scheme:dark;--bg:#080e1b;--panel:#111c30;--panel2:#17243a;--line:#263650;--text:#f1f5f9;--muted:#91a2ba;--red:#f87171;--green:#34d399;--blue:#60a5fa;--header:#111b2e;--field:#0b1120;--nav:#101a2b;--shadow:#0005}
+:root[data-theme="light"]{color-scheme:light;--bg:#f1f5f9;--panel:#ffffff;--panel2:#f1f5f9;--line:#d8e0eb;--text:#172033;--muted:#64748b;--red:#dc4545;--green:#059669;--blue:#2563eb;--header:#ffffff;--field:#f8fafc;--nav:#ffffff;--shadow:#33415520}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;padding-bottom:88px}
-header{background:linear-gradient(135deg,#17243a,#10192b);padding:18px 16px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;padding-bottom:88px;transition:background .2s,color .2s}
+header{background:var(--header);padding:15px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;box-shadow:0 4px 18px var(--shadow)}
 .headrow{max-width:950px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;background:#f87171;color:#111827;display:grid;place-items:center;font-size:23px}
+.head-actions{display:flex;align-items:center;gap:8px}.theme-toggle{width:auto;margin:0;padding:8px 11px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:22px;font-size:11px;white-space:nowrap}
 header h1{font-size:20px;color:#fff;margin:0}header p{font-size:11px;color:var(--muted);margin:5px 0 0}
 .demo-badge{font-size:11px;color:#fbbf24;background:#3b2c13;border:1px solid #72531c;padding:7px 10px;border-radius:20px;white-space:nowrap}
 main{max-width:950px;margin:auto;padding:14px}
@@ -32,17 +34,23 @@ main{max-width:950px;margin:auto;padding:14px}
 .stat{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0}
 .stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:9px}.stat strong{font-size:18px;direction:ltr;display:block;text-align:right;overflow-wrap:anywhere}
 label{display:block;font-size:13px;color:#cbd5e1;margin:12px 0 6px}
-input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0b1120;color:white;font-size:14px}
+input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--text);font-size:14px}
+input::placeholder{color:var(--muted)}
 button{border:0;cursor:pointer;font-weight:bold;background:#334155;margin-top:10px}
 button:disabled{opacity:.5;cursor:not-allowed}
 .green{background:#059669}.red{background:#dc2626}.primary{background:#e85d68;color:#180b0d}.blue{background:#2563eb}
 hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 .tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;min-width:490px}
 th,td{padding:10px 7px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}th{color:var(--muted)}
+:root[data-theme="light"] .demo-badge{background:#fff7df;color:#986300;border-color:#f2d48a}
+:root[data-theme="light"] .navbtn{color:#64748b}
+:root[data-theme="light"] .navbtn.active{background:#fee2e2;color:#991b1b}
+:root[data-theme="light"] .install-float{color:#fff}
+:root[data-theme="light"] iframe{background:#fff}
 .coinline{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
 .coinline:last-child{border-bottom:0}.coinname{font-weight:bold}.coinname small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
 .price{direction:ltr;text-align:left;font-weight:bold}.tag{font-size:11px;border-radius:20px;padding:5px 8px;background:#183c32;color:var(--green)}
-.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#101a2b;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 25px #0005}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--nav);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 25px #0005}
 .navbtn{background:transparent;color:#8fa1ba;margin:0;padding:7px 2px;border-radius:12px;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}
 .navbtn span{font-size:20px}.navbtn.active{background:#26364f;color:#fff}
 .navbtn.active span{filter:drop-shadow(0 0 5px #f87171)}
@@ -56,7 +64,10 @@ th,td{padding:10px 7px;border-bottom:1px solid var(--line);text-align:center;whi
 <body>
 <header><div class="headrow">
   <div class="brand"><div class="logo">🏆</div><div><h1>Trading Sport</h1><p>تمرین هوشمند معامله‌گری</p></div></div>
-  <div class="demo-badge">● حساب دمو</div>
+  <div class="head-actions">
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="تغییر پوسته">☀️ روشن</button>
+    <div class="demo-badge">● حساب دمو</div>
+  </div>
 </div></header>
 
 <button id="installApp" class="install-float" style="display:none">📲 نصب برنامه</button>
@@ -146,6 +157,26 @@ const PRICE_API="https://trading-sport-api.onrender.com/api/prices";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 let user=null,account=null,btcPrice=0,busy=false,refreshing=false,installPrompt=null;
+
+/* پوسته روشن و تاریک؛ انتخاب کاربر در گوشی ذخیره می‌شود */
+function applyTheme(theme){
+  const chosen=theme==="light"?"light":"dark";
+  document.documentElement.dataset.theme=chosen;
+  const button=$("themeToggle");
+  if(button){
+    button.textContent=chosen==="dark"?"☀️ روشن":"🌙 تاریک";
+    button.setAttribute("aria-label",chosen==="dark"?"فعال‌کردن پوسته روشن":"فعال‌کردن پوسته تاریک");
+  }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=chosen==="dark"?"#0b1120":"#f1f5f9";
+}
+const savedTheme=localStorage.getItem("tradingSportTheme")||"dark";
+applyTheme(savedTheme);
+$("themeToggle").addEventListener("click",()=>{
+  const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem("tradingSportTheme",next);
+  applyTheme(next);
+});
 
 function money(n){if(!Number.isFinite(Number(n)))return "—";return Number(n).toLocaleString("fa-IR",{maximumFractionDigits:2});}
 function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
